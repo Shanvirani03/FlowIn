@@ -1,0 +1,43 @@
+.homePage {
+    color: white;
+    background-color: black;
+    height: 100vh;
+}
+
+.homePage h1 {
+    text-align: center;
+    margin-top: 200px; 
+    font-size: 3cm;
+}
+
+.homePageContainer {
+    text-align: center;
+    background-color: black;
+    width: 700px;
+    height: 400px;
+    margin-left: 380px;
+    margin-top: 0px;
+}
+
+.homePageContainer p {
+    margin-top: -40px;
+}
+
+.homePageContainer span {
+    color: red;
+}
+
+.homePageContainer button {
+    opacity: 0.7;
+    font-size: 1.2em;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+
+
