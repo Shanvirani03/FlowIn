@@ -1,33 +1,51 @@
-.homePage {
+.landingPage {
+    /* background-image: url('../assets/steamuserimages-a.akamaihd.jpg'); */
+    height: 100vh;
     color: white;
     background-color: black;
-    height: 100vh;
+    height: 30em;
 }
 
-.homePage h1 {
-    text-align: center;
-    margin-top: 200px; 
-    font-size: 3cm;
-}
-
-.homePageContainer {
-    text-align: center;
-    background-color: black;
-    width: 700px;
+.headerContainer {
+    opacity: 0;
+    background-image: url('../assets/steamuserimages-a.akamaihd.jpg');
+    background-size: cover;
+    width: 80%;
+    max-width: 1000px;
     height: 400px;
-    margin-left: 380px;
-    margin-top: 0px;
+    /* background: black; */
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    top: 40%;
+    text-align: center;
+    animation: fadeIn 2s ease-in-out forwards;
 }
 
-.homePageContainer p {
-    margin-top: -40px;
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
-.homePageContainer span {
-    color: red;
+.headerContainer h1 {
+    font-size: 6em;
+    margin: 0;
+  }
+
+.headerContainer h1 span {
+    color:red
+}
+.headerContainer p {
+    font-size: 1.5em;
+    margin-top: 20px;
+    color: grey;
 }
 
-.homePageContainer button {
+.headerContainer button {
     opacity: 0.7;
     font-size: 1.2em;
     margin-top: 20px;
@@ -39,5 +57,8 @@
     cursor: pointer;
 }
 
+.headerContainer button:hover {
+    transform: scale(1.1);
+}
 
 

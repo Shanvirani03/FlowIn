@@ -1,74 +1,92 @@
 .login-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 90vh;
-    background-color: rgb(0, 0, 0);
-    color: white;
-  }
-  
-  .header-container {
-    opacity: 0;
-    font-size: 3em;
-    animation: fadeIn 1s ease-in-out forwards;
-  }
-
-  @keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  background-color: rgb(0, 0, 0);
+  color: white;
 }
-  
-  .header-container span {
-    color: red;
+
+.header-container {
+  opacity: 0;
+  font-size: 3em;
+  animation: fadeIn 1s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+      opacity: 0;
   }
-  
-  .form-container {
-    background-size: cover;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background-color: black;
-    color: black;
-    border-color: red;
-    width: 800px;
-    height: 250px;
+  100% {
+      opacity: 1;
   }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  input {
-    margin-bottom: 20px; /* Add some vertical space */
-    padding: 10px;
-    border: 1px solid rgb(90, 90, 90);
-    border-radius: 5px;
-    font-size: 1.2em;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.3);
-    width: 40%;
-  }
-  
-  input::placeholder {
-    color: white;
-  }
-  
-  button {
-    margin-bottom: 20px; /* Add some vertical space */
-    padding: 10px 20px;
-    border-radius: 5px;
-    background-color: red;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2em;
-  }
+}
+
+.header-container span {
+  color: green;
+}
+
+.form-container {
+  background-size: cover;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: black;
+  color: black;
+  border-color: #3CB371;
+  width: 800px;
+  height: 250px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+input {
+  margin-bottom: 20px; /* Add some vertical space */
+  padding: 10px;
+  border: 1px solid rgb(90, 90, 90);
+  border-radius: 5px;
+  font-size: 1.2em;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 40%;
+}
+
+input::placeholder {
+  color: white;
+}
+
+button {
+  margin-bottom: 20px; /* Add some vertical space */
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #3CB371;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.input-container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-btn {
+  display: inline;
+  position: relative;
+  z-index: 2;
+  background-color: transparent;
+}
+
+button:hover{
+  transform: scale(1.1);
+}
