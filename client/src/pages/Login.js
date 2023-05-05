@@ -20,12 +20,11 @@ function getPasswordBtnStyle(icon) {
 }
 
 function Login(props) {
+
   const [usernameOrEmail, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-
   const [_, setCookies] = useCookies(["access_token"])
-
   const navigate = useNavigate();
 
   const toggleShowPassword = () => {
@@ -33,7 +32,6 @@ function Login(props) {
   };
 
   const eyeIcon = showPassword ? hideEyeIcon : showEyeIcon;
-
   const buttonStyle = getPasswordBtnStyle(eyeIcon) 
   
   const onSubmit = async (event) => {
@@ -43,22 +41,18 @@ function Login(props) {
             usernameOrEmail,
             password
         });
-    
-        console.log("response.data: ", response.data);
-        console.log("usernameOrEmail: ", usernameOrEmail)
-        console.log("password: ", password)
-        
+
         if (response.data.message) {
-            alert("Oob is alert.")
+            alert(response.data.message)
         }
         else {
             setCookies("access_token", response.data.token);
+            console.log(response.data.token)
             window.localStorage.setItem("userID", response.data.userID);
             navigate("/Profile")
         }
 
     } catch (err) {
-        console.log("oob has error");
         console.error(err);
     }
   };
