@@ -21,7 +21,7 @@ function getPasswordBtnStyle(icon) {
 
 function Login(props) {
 
-  const [usernameOrEmail, setUsername] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [_, setCookies] = useCookies(["access_token"])
@@ -37,8 +37,8 @@ function Login(props) {
   const onSubmit = async (event) => {
     event.preventDefault();
     try {
-        const response = await axios.post("http://localhost:3001/auth/login", {
-            usernameOrEmail,
+        const response = await axios.post("http://localhost:3001/auth/Login", {
+            username,
             password
         });
 
@@ -48,12 +48,12 @@ function Login(props) {
         else {
             setCookies("access_token", response.data.token);
             console.log(response.data.token)
-            window.localStorage.setItem("userID", response.data.userID);
+            window.localStorage.setItem("userID", response.data.user._id);
             navigate("/Profile")
         }
 
     } catch (err) {
-        console.error(err);
+        alert("Username or Password is incorrect")
     }
   };
 
@@ -67,7 +67,7 @@ function Login(props) {
       <div className='form-container'>
         <form onSubmit={onSubmit}>
           <div className="input-container">
-            <input className="text-input" type='text' placeholder='Username or Email' value={usernameOrEmail} onChange={(e) => setUsername(e.target.value)} />
+            <input className="text-input" type='text' placeholder='Username or Email' value={username} onChange={(e) => setUsername(e.target.value)} />
           </div>
           <div className="input-container">
             <input className='password-input' type={showPassword ? 'text' : 'password'} placeholder='Password' 

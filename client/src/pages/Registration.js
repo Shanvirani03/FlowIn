@@ -81,24 +81,28 @@ function Registration() {
 
   const onSubmit = async (event) => {
     event.preventDefault();
+
     try {
-        await axios.post("http://localhost:3001/auth/register", {
-            username,
-            password,
-            email
+
+        await axios.post("http://localhost:3001/auth/Registration", {
+        username,
+        password,
+        email
         });
 
-        const errors = validateInput(username, email, password, confirmPassword) 
+        alert("Registration Completed! Now Login.")
+        navigate('/Login')
+        
+    } catch (err) {
 
+        const errors = validateInput(username, email, password, confirmPassword) 
         if (Object.keys(errors).length > 0) {
           setErrors(errors);
           return;
         }
 
-        alert("Registration Completed! Now Login.")
-        navigate('/Login')
-    } catch (err) {
-        console.error(err);
+        alert("Registration Unsuccessful");
+
     }
 };
 

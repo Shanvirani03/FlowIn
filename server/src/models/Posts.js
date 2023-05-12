@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
-import bcrypt from 'bcrypt';
+import mongoose, { Schema } from "mongoose";
+import { UserModel } from "./Users.js";
 
 const PostsSchema = new mongoose.Schema({
-    username: {type: String, required: true, unique: true},
-    email: {type: String, required: true, unique: true},
-    password: {type: String, required: true},
-    profilePic: {type: String}
-});
+    title: {type: String, required: true},
+    body: {type: String, required: true},
+    photo: {type: String, default: "no photo"},
+    postedBy: {type: mongoose.Schema.Types.ObjectId, ref: UserModel}
+})
 
-export const UserModel = mongoose.model('users', PostsSchema);
+export const PostsModel = mongoose.model('posts', PostsSchema);

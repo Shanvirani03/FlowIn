@@ -1,21 +1,30 @@
-import express from "express";
-import cors from 'cors' 
-import mongoose from "mongoose";
-import { userRouter } from './routes/users.js'
+import cors from 'cors';
+import dotenv from 'dotenv';
+import { authRoutes } from "./routes/auth.js";
+import express from 'express';
+import mongoose from 'mongoose';
+import { postsRouter } from './routes/posts.js';
+const env = dotenv.config()
 
 
+/* CONFIGURATIONS */
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use("/auth", userRouter);
+ 
+/* ROUTES */
+app.use("/auth", authRoutes);
+app.use("/posts", postsRouter)
 
-mongoose.connect('mongodb+srv://Shanvirani6:1OqG4KN3sa044hhi1@offtop.oyvygrj.mongodb.net/offtop?retryWrites=true&w=majority').then(
-  () => { 
-     console.log("Connected to DB!");
- },
-  err => { 
-    console.log(err);
- }
-);
+/* MONGOOSE SETUP */
+const PORT = process.env.REACT_APP_PORT || 6001;
 
-app.listen(3001, () => console.log("SERVER STARTED!"))
+mongoose.connect(process.env.REACT_APP_MONGO_URL, {
+
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+
+}).then(() => {
+  app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+})
+.catch((error) => console.log(`${error} did not connect`));
