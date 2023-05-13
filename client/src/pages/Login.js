@@ -49,6 +49,7 @@ function Login(props) {
             setCookies("access_token", response.data.token);
             console.log(response.data.token)
             window.localStorage.setItem("userID", response.data.user._id);
+            window.localStorage.setItem("jwt", response.data.token);
             navigate("/Profile")
         }
 

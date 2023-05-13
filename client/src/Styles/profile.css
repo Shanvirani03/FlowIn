@@ -136,7 +136,7 @@
     margin-left: 1050px;
     height: 500px;
     margin-top: -490px;
-    border-left: 0.3px solid rgb(57, 57, 57);
+    /* border-left: 0.3px solid rgb(57, 57, 57); */
   }
   
   .Friends h1 {
@@ -163,3 +163,11 @@
     
   }
   
+  .tweet {
+    background-color: black;
+    margin-bottom: -10px;
+    border-bottom: 0.5px solid grey;
+    border-left: 0.5px solid grey;
+    border-right: 0.5px solid grey;
+    border-top: 0.5px solid grey;
+  }

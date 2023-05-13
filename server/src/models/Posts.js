@@ -5,6 +5,7 @@ const PostsSchema = new mongoose.Schema({
     title: {type: String, required: true},
     body: {type: String, required: true},
     photo: {type: String, default: "no photo"},
+    date: {type: Date, default: Date.now},
     postedBy: {type: mongoose.Schema.Types.ObjectId, ref: UserModel}
 })
 

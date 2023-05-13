@@ -9,14 +9,13 @@ export const verifyToken = async (req, res, next) => {
   }
 
   const token = authorization.replace('Bearer ', '');
- 
 
   jwt.verify(token, process.env.REACT_APP_JWT_SECRET, (err, payload) => {
     if (err) {
       return res.status(401).json({error: "you must be logged in"})
     }
-    const { id } = payload;
-    UserModel.findById(id)
+    const { _id } = payload;
+    UserModel.findById(_id)
       .then((userdata) => {
         req.user = userdata;
         next();
