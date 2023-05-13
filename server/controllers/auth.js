@@ -22,12 +22,47 @@ const UserModel = mongoose.model('users');
 //     }
 // }
 
+// router.post('/login', async (req, res) => {
+//     const { usernameOrEmail, password } = req.body;
+
+//     var user;
+//     if (usernameOrEmail.includes("@")) {
+//         user = await UserModel.findOne({ email : usernameOrEmail });
+//     } else {
+//         user = await UserModel.findOne({ username : usernameOrEmail });
+//     }
+
+//     if (user) {
+//         const isPasswordValid = await bcrypt.compare(password, user.password);
+//         console.log("isPasswordValid: ", isPasswordValid);
+//         if (!isPasswordValid) {
+//             return res.json({ message: "Password Is Incorrect"});
+//         }
+        
+//         const token = jwt.sign({ id: user._id }, 'secret');
+//         res.json({ token, userID: user._id });
+
+//     } else {
+//         return res.json({ message: "Username Or Password Is Incorrect!" });
+//     }
+// });
+
 export const login = async (req, res) => {
-    const {username,password} = req.body
-    if(!username || !password){
+    console.log(req.body)
+    const { username, password } = req.body
+
+    var user;
+    if (username.includes("@")) {
+        user = await UserModel.findOne({ email : username })
+    } else {
+        user = await UserModel.findOne({ username : username})
+    }
+
+    if (!username || !password){
        return res.status(422).json({error:"please add email or password"})
     }
-    UserModel.findOne({username})
+
+    UserModel.findOne({ username })
     .then(savedUser=>{
         if(!savedUser){
            return res.status(422).json({error:"Invalid Email or password"})
@@ -37,7 +72,7 @@ export const login = async (req, res) => {
             if(doMatch){
                 // res.json({message:"successfully signed in"})
                const token = jwt.sign({_id:savedUser._id},process.env.REACT_APP_JWT_SECRET)
-               const {_id,name,email,followers,following,pic} = savedUser
+               const {_id, name, email, followers, following, pic} = savedUser
                res.json({token,user:{_id,name,email,followers,following,pic}})
             }
             else{
@@ -120,31 +155,5 @@ export const register = async (req, res) => {
 //     } catch (error) {
 //         console.log(error);
 //         res.status(500).json({ message: "Internal Server Error" });
-//     }
-// });
-
-
-// router.post('/login', async (req, res) => {
-//     const { usernameOrEmail, password } = req.body;
-
-//     var user;
-//     if (usernameOrEmail.includes("@")) {
-//         user = await UserModel.findOne({ email : usernameOrEmail });
-//     } else {
-//         user = await UserModel.findOne({ username : usernameOrEmail });
-//     }
-
-//     if (user) {
-//         const isPasswordValid = await bcrypt.compare(password, user.password);
-//         console.log("isPasswordValid: ", isPasswordValid);
-//         if (!isPasswordValid) {
-//             return res.json({ message: "Password Is Incorrect"});
-//         }
-        
-//         const token = jwt.sign({ id: user._id }, 'secret');
-//         res.json({ token, userID: user._id });
-
-//     } else {
-//         return res.json({ message: "Username Or Password Is Incorrect!" });
 //     }
 // });

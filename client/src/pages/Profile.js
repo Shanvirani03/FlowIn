@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import "../Styles/profile.css"
 import axios from "axios";
+import pencilIcon from '../assets/icons8-pencil-50.png';
 
 
 export const Profile = () => {
@@ -14,6 +15,24 @@ export const Profile = () => {
     const [showUserPosts, setShowUserPosts] = useState(false);
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
+
+    useEffect(() => {
+      axios.put("http://localhost:3001/posts/like", {
+        headers : { "Authorization": localStorage.getItem("jwt")}
+      })
+        .then(response => {
+          console.log(response)
+        })
+    }, [])
+
+    useEffect(() => {
+      axios.put("http://localhost:3001/posts/unlike", {
+        headers : { "Authorization": localStorage.getItem("jwt")}
+      })
+        .then(response => {
+          console.log(response)
+        })
+    }, [])
 
     useEffect(() => {
       axios.get("http://localhost:3001/posts/allPosts")
@@ -111,7 +130,7 @@ export const Profile = () => {
         <div className="info">
           <div className="Feed">
             <h1>Posts</h1>
-            <h2>0</h2>
+            <h2>{myPosts.length}</h2>
           </div>
           <div className="Followers">
             <h1>Followers</h1>
@@ -119,10 +138,6 @@ export const Profile = () => {
           </div>
           <div className="Following">
             <h1>Following</h1>
-            <h2>0</h2>
-          </div>
-          <div className="wins">
-            <h1>Wins</h1>
             <h2>0</h2>
           </div>
           <div className="editProfile">
@@ -143,17 +158,23 @@ export const Profile = () => {
             </button>
           </div>
           <div className="createPost">
-            <button onClick={() => setShowCreatePostForm(true)}> Create Post </button>
+            <button onClick={() => setShowCreatePostForm(true)}> <img src={pencilIcon} alt="Create Post" /> </button>
           </div>
-          {showCreatePostForm && (
-              <form onSubmit={createPost}>
-                <label>Title:</label>
-                <input type="text" value={title} onChange={(event) => setTitle(event.target.value)} />
-                <label>Body:</label>
-                <textarea value={body} onChange={(event) => setBody(event.target.value)}></textarea>
-                <button type="submit">Create Post</button>
-                <button onClick={()=> setShowCreatePostForm(false)}> Cancel</button>
-              </form>
+{showCreatePostForm && (
+  <form onSubmit={createPost} className="createPostForm">
+    <div className="formGroup">
+      <label htmlFor="title">Title:</label>
+      <input type="text" id="title" value={title} onChange={(event) => setTitle(event.target.value)} />
+    </div>
+    <div className="formGroup">
+      <label htmlFor="body">Body:</label>
+      <textarea id="body" value={body} onChange={(event) => setBody(event.target.value)}></textarea>
+    </div>
+    <div className="formActions">
+      <button type="submit" className="submitButton">Submit</button>
+      <button type="button" onClick={()=> setShowCreatePostForm(false)} className="cancelButton"> Cancel</button>
+    </div>
+  </form>
             )}
         </div>
         <div className='personalInfo'>
@@ -171,7 +192,7 @@ export const Profile = () => {
         <div className='tweets'>
         {showUserPosts ? (
           myPosts.map(post => (
-            <div key={post._id}>
+            <div key={post._id} className="tweet">
               <h3>{post.title}</h3>
               <p>{post.body}</p>
               {/* <img src={post.photo} alt="Post" /> */}

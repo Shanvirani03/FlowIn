@@ -70,7 +70,7 @@
   
   .info .editProfile {
     margin-top: 20px;
-    margin-left: 300px;
+    margin-left: 390px;
     margin-bottom: 30px;
     background-color: black;
     height: fit-content;
@@ -171,3 +171,17 @@
     border-right: 0.5px solid grey;
     border-top: 0.5px solid grey;
   }
+
+  .createPost {
+    background-color: transparent;
+    margin-left: 265px;
+    margin-top: -5px;
+  }
+
+  .createPost img {
+    height: 36px;
+  }
+  
+
+
+  

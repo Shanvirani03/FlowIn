@@ -2,7 +2,6 @@ import express from 'express';
 import { PostsModel } from '../models/Posts.js';
 import { verifyToken } from '../../middleware/auth.js';
 
-
 const router = express.Router()
 
 router.get('/allPosts', (req, res) => {
@@ -28,7 +27,7 @@ router.get('/allPosts', (req, res) => {
 
 
 router.get('/myPosts', verifyToken,(req, res) => {
-    PostsModel.find({postedBy : req.user.id})
+    PostsModel.find({ postedBy : req.user.id })
         .then(posts => {
             if (!posts) {
                 return res.status(404).json({ error: 'No posts found' });
@@ -52,8 +51,7 @@ router.post('/createPost', verifyToken, (req,res) => {
     const {title, body, _id} = req.body;
     if(!title || !body) {
         res.status(422).json({error: "Please complete all fields"})
-    }
-    
+    } 
     const post = new PostsModel({
         title,
         body,
@@ -67,5 +65,33 @@ router.post('/createPost', verifyToken, (req,res) => {
     })
 })
 
+router.put('/like', verifyToken, (req, res) => {
+    PostsModel.findByIdAndUpdate(req.body.postId, {
+        $push : {likes : req.user._id}
+    }, {
+        new : true
+    }).exec((err, result) => {
+        if (err) {
+            return res.status(422).json({ error : err })
+        } else {
+            res.json(result)
+        }
+    })
+})
+
+
+router.put('/unlike', verifyToken, (req, res) => {
+    PostsModel.findByIdAndUpdate(req.body.postId, {
+        $push : {likes : req.user._id}
+    }, {
+        new : true
+    }).exec((err, result) => {
+        if (err) {
+            return res.status(422).json({ error : err })
+        } else {
+            res.json(result)
+        }
+    })
+})
 export { router as postsRouter };
 
