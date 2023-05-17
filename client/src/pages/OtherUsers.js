@@ -3,14 +3,16 @@ import { useState, useEffect } from "react";
 import "../Styles/profile.css"
 import axios from "axios";
 import pencilIcon from '../assets/icons8-pencil-50.png';
+import { useParams } from "react-router-dom";
 
 
 export const Profile = () => {
-
-    const [profilePicture, setProfilePicture] = useState(null);
-    const [backgroundPicture, setBackgroundPicture] = useState(null);
+    
+    const {userId} = useParams()
     const [followers, setFollowers] = useState([]);
     const [following, setFollowing] = useState([]);
+    const [profilePicture, setProfilePicture] = useState(null);
+    const [backgroundPicture, setBackgroundPicture] = useState(null);
     const [posts, setPosts] = useState([]);
     const [myPosts, setMyPosts] = useState([]);
     const [showCreatePostForm, setShowCreatePostForm] = useState(false);
@@ -19,128 +21,122 @@ export const Profile = () => {
     const [body, setBody] = useState("");
 
     useEffect(() => {
-      axios.get("http://localhost:3001/users/getUserInfo", {
-        headers: { "Authorization": localStorage.getItem('jwt')}
-      }).then(response => {
-        console.log(followers, following)
-        setFollowers(response.data.followers)
-        setFollowing(response.data.following)
-      }).catch(error => {
-        console.log(error);
-      })
-    }, []);
-    
-    useEffect(() => {
-      axios.get("http://localhost:3001/posts/allPosts")
-        .then(response => {
-          setPosts(response.data.posts);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }, []);
-    
-    useEffect(() => {
-      axios.get("http://localhost:3001/posts/myPosts", {
-        headers: {"Authorization" : localStorage.getItem('jwt')}
-      })
-        .then(response => {
-          setMyPosts(response.data.posts);
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }, []);
-    
-    const likePost = (id) => {
-      try {
-        axios.put(
-          "http://localhost:3001/posts/like",
-          { postId: id },
-          { headers: { "Authorization": localStorage.getItem('jwt') } }
-        )
-        .then(response => {
-          console.log(response.data);
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    
-    const unlikePost = (id) => {
-      try {
-        axios.put(
-          "http://localhost:3001/posts/unlike",
-          { postId: id },
-          { headers: { "Authorization": localStorage.getItem('jwt') } }
-        )
-        .then(response => {
-          console.log(response.data);
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    
-    const handleShowAllPosts = () => {
-      setShowUserPosts(false);
-    };
-    
-    const handleShowUserPosts = () => {
-      setShowUserPosts(true);
-    };
-    
-    const createPost = async (event) => {
-      event.preventDefault();
-      try {
-        await axios.post(
-          "http://localhost:3001/posts/createPost",
-          { title: title, body: body },
-          { headers: { "Authorization": localStorage.getItem('jwt') } }
-        );
-        alert("Post successfully created");
-        setShowCreatePostForm(false);
-        setTitle("");
-        setBody("");
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    
-    const setBackground = (event) => {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        setBackgroundPicture(reader.result);
-      };
-    };
-    
-    const handleUpload = (event) => {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        setProfilePicture(reader.result);
-      };
-    };
+        axios.get("http://localhost:3001/posts/allPosts")
+          .then(response => {
+            setPosts(response.data.posts);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }, []);
   
-    const deletePost = (postId) => {
-      axios.delete(`http://localhost:3001/posts/deletePost/${postId}`, {
-        headers: {
-          "Authorization": localStorage.getItem('jwt')
-        }
-      })
-        .then(response => {
-          console.log(response.data);
+      useEffect(() => {
+        axios.get(`http://localhost:3001/users/user/${userId}`, {
+          headers: {"Authorization" : localStorage.getItem('jwt')}
         })
-        .catch(error => {
-          console.log(error);
-        });
-    };
+          .then(response => {
+            setMyPosts(response.data.posts);
+            setFollowers(response.data.user.followers)
+            setFollowing(response.data.user.following)
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }, []);
+  
+      const likePost = (id) => {
+        try {
+          axios.put("http://localhost:3001/posts/like",
+            {
+              postId: id
+            },
+            {
+              headers: {
+                "Authorization": localStorage.getItem('jwt')
+              }
+            }
+          )
+          .then(response => {
+            console.log(response.data);
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      }
+  
+      const unlikePost = (id) => {
+        try {
+          axios.put("http://localhost:3001/posts/unlike",
+            { postId: id },
+            { headers: { "Authorization": localStorage.getItem('jwt')}}
+          )
+          .then(response => {
+            console.log(response.data);
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      
+      const handleShowAllPosts = () => {
+        setShowUserPosts(false);
+      }
+      
+      const handleShowUserPosts = () => {
+        setShowUserPosts(true);
+      }
+  
+      const createPost = async (event) => {
+        event.preventDefault();
+        try {
+          await axios.post("http://localhost:3001/posts/createPost", {
+            title: title,
+            body: body
+          }, {
+            headers: {
+              "Authorization": localStorage.getItem('jwt')
+            }
+          });
+          alert("Post Successfully created");    
+          setShowCreatePostForm(false);
+          setTitle("");
+          setBody("");
+        } catch (err) {
+          console.log(err);
+        }
+      };
+  
+      const setBackground = (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          setBackgroundPicture(reader.result);
+        };
+      };
     
-    
+      const handleUpload = (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          setProfilePicture(reader.result);
+        };
+      };
+  
+      const followUser = async (event) => {
+        try {
+          const response = await axios.put("http://localhost:3001/users/follow",
+            { followId: userId },
+            { headers: { "Authorization": localStorage.getItem("jwt") } }
+          );
+          console.log(response.data);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      
+
     return (
       <div className="profilePage">
         <div className="profileHeader"></div>
@@ -154,7 +150,7 @@ export const Profile = () => {
           <div className="Feed"> <h1>Posts</h1> <h2>{myPosts.length}</h2> </div>
           <div className="Followers"> <h1>Followers</h1> <h2>{followers.length}</h2> </div>
           <div className="Following"> <h1>Following</h1> <h2>{following.length}</h2> </div>
-          <div className="editProfile"> <button className='editProfileButton'> <h1> Edit Profile </h1> </button> </div>
+          <div className="editProfile">  <button onClick={followUser}> Follow </button> </div>
         </div>
         <div className="myPosts">
           <div className="page"> <button> <h1 onClick={handleShowAllPosts}>My Page</h1> </button> </div>
@@ -178,7 +174,7 @@ export const Profile = () => {
           )}
         </div>
         <div className='personalInfo'>
-          <h1>Shan Virani</h1>
+          <h1>Tani Attri</h1>
           <div className='bio'> <p>Bol Player, Oob Toucher, AechQ Resident</p> </div>
           <div className='location'> Fremont, CA </div>
           <div className='dayJoined'> Joined June 2008 </div>
@@ -187,7 +183,7 @@ export const Profile = () => {
         {showUserPosts ? (
           myPosts.map(post => (
             <div key={post._id} className="tweet">
-              <h3>{post.postedBy.username}</h3>
+              <h3>{post.title}</h3>
               <p>{post.body}</p>
               {/* <img src={post.photo} alt="Post" /> */}
               <p> Posted by {post.postedBy.username} on {} {" "} 
@@ -198,9 +194,7 @@ export const Profile = () => {
                 hour: "2-digit",
                 minute: "2-digit",
               })}
-              <button onClick={() => likePost(post._id)}> 
-              Jello
-              </button>
+              <button onClick={() => likePost(post._id)}> Jello </button>
               {post.likes.length}
               </p>
             </div>
@@ -208,10 +202,7 @@ export const Profile = () => {
         ) : (
           posts.map(post => (
             <div key={post._id} className="tweet">
-              <h3>{post.postedBy.username}</h3>
-              <button onClick={() => deletePost(post._id)}>
-                deletePost
-              </button>
+              <h3>{post.title}</h3>
               <p>{post.body}</p>
               {/* <img src={post.photo} alt="Post" /> */}
               <p> Posted by {post.postedBy.username} on {" "} 
@@ -230,7 +221,7 @@ export const Profile = () => {
         </div>
         <div className='yourPosts'></div>
         <div className='Friends'>
-        <h1>Friends</h1>
+             <h1>Friends</h1> 
           <div className='friendsContainer'> 
             <div className='allFriends'>
               All Friends

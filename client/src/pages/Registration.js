@@ -22,16 +22,12 @@ function getPasswordBtnStyle(icon) {
 }
 
 function setPasswordEyeIcons(showPassword, showConfirmPassword) {
-
   const eyeIcon1 = showPassword ? hideEyeIcon : showEyeIcon;
-
   const buttonStyle1 = getPasswordBtnStyle(eyeIcon1)  
-
   const eyeIcon2 = showConfirmPassword ? hideEyeIcon : showEyeIcon;
-
   const buttonStyle2 = getPasswordBtnStyle(eyeIcon2) 
-
   return [buttonStyle1, buttonStyle2]
+
 }
 
 function validateInput(username, email, password, confirmPassword) {
@@ -83,26 +79,20 @@ function Registration() {
     event.preventDefault();
 
     try {
-
         await axios.post("http://localhost:3001/auth/Registration", {
         username,
         password,
         email
         });
-
         alert("Registration Completed! Now Login.")
         navigate('/Login')
-        
     } catch (err) {
-
         const errors = validateInput(username, email, password, confirmPassword) 
         if (Object.keys(errors).length > 0) {
           setErrors(errors);
           return;
         }
-
         alert("Registration Unsuccessful");
-
     }
 };
 
@@ -119,7 +109,6 @@ function Registration() {
       </div>
       <div className="form-container">
         <form onSubmit={onSubmit}>
-
         <div className="input-container">
           <input
             className="text-input"
@@ -129,10 +118,8 @@ function Registration() {
             title="Username must be atleast 3 characters long"
             onChange={(event) => setUsername(event.target.value)}
           />
-          
           {errors.username && <p className="error">{errors.username}</p>}
         </div>
-
         <div className="input-container">
           <input
             className="text-input"
@@ -141,10 +128,8 @@ function Registration() {
             value={email}
             onChange={(event) => setEmail(event.target.value)}
           />
-           
           {errors.email && <p className="error">{errors.email}</p>}
         </div>
-
           <div className="input-container">
             <input
               className="password-input"
@@ -158,7 +143,6 @@ function Registration() {
               onClick={toggleShowPassword} aria-label="Toggle password visibility" /> 
             {errors.password && <p className="error">{errors.password}</p>}
           </div>    
-
         <div className="input-container">
           <input
             className="password-input"
@@ -174,7 +158,6 @@ function Registration() {
             <p className="error">{errors.confirmPassword}</p>
           )}
         </div>
-
           <button className="submit-btn" type="submit">Register</button>
         </form>
       </div>

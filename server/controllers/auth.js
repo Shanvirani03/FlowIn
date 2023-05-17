@@ -48,7 +48,6 @@ const UserModel = mongoose.model('users');
 // });
 
 export const login = async (req, res) => {
-    console.log(req.body)
     const { username, password } = req.body
 
     var user;
@@ -73,7 +72,7 @@ export const login = async (req, res) => {
                 // res.json({message:"successfully signed in"})
                const token = jwt.sign({_id:savedUser._id},process.env.REACT_APP_JWT_SECRET)
                const {_id, name, email, followers, following, pic} = savedUser
-               res.json({token,user:{_id,name,email,followers,following,pic}})
+               res.json({ token, user : {_id, name, email, followers, following, pic }})
             }
             else{
                 return res.status(422).json({error:"Invalid Email or password"})

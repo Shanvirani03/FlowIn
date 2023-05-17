@@ -23,6 +23,7 @@ export const createPost = async (req, res) => {
     }
 }
 
+
 /* READ */
 export const getFeedPosts = async  (req, res) => {
     try {

@@ -39,7 +39,7 @@ function Login(props) {
     try {
         const response = await axios.post("http://localhost:3001/auth/Login", {
             username,
-            password
+            password,
         });
 
         if (response.data.message) {
@@ -48,7 +48,7 @@ function Login(props) {
         else {
             setCookies("access_token", response.data.token);
             console.log(response.data.token)
-            window.localStorage.setItem("userID", response.data.user._id);
+            window.localStorage.setItem("userID", [response.data.user._id, response.data.user.email, response.data.user.followers, response.data.user.following]);
             window.localStorage.setItem("jwt", response.data.token);
             navigate("/Profile")
         }

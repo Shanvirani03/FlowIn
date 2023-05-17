@@ -4,7 +4,9 @@ import { authRoutes } from "./routes/auth.js";
 import express from 'express';
 import mongoose from 'mongoose';
 import { postsRouter } from './routes/posts.js';
+import { userRouter } from './routes/users.js';
 const env = dotenv.config()
+
 
 
 /* CONFIGURATIONS */
@@ -14,7 +16,8 @@ app.use(cors());
  
 /* ROUTES */
 app.use("/auth", authRoutes);
-app.use("/posts", postsRouter)
+app.use("/posts", postsRouter);
+app.use("/users", userRouter);
 
 /* MONGOOSE SETUP */
 const PORT = process.env.REACT_APP_PORT || 6001;

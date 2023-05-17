@@ -5,9 +5,14 @@ import LandingPage from "./pages/Home";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import Profile from "./pages/Profile";
+import OtherUsers from "./pages/OtherUsers"
+import { useParams } from "react-router-dom";
 
 
 function App() {
+
+  const { userId } = useParams()
+
   return (
     <div className="App">
         <Router> 
@@ -16,7 +21,8 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Registration" element={<Registration />} />
-            <Route path="/Profile" element={<Profile />} />
+            <Route exact path="/Profile" element={<Profile />} />
+            <Route path="/Profile/:userId" element={<OtherUsers />} />
           </Routes>
         </Router>
     </div>

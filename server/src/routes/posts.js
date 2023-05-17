@@ -65,33 +65,69 @@ router.post('/createPost', verifyToken, (req,res) => {
     })
 })
 
+router.delete("/deletePost/:postId", verifyToken, (req, res) => {
+  PostsModel.findOne({ _id: req.params.postId })
+    .populate("postedBy", "_id")
+    .then(post => {
+      if (!post) {
+        return res.status(422).json({ error: "Post not found" });
+      }
+      if (post.postedBy._id.toString() === req.user._id.toString()) {
+          return post.deleteOne()
+      } else {
+        return res.status(401).json({ error: "Unauthorized access" });
+      }
+    })
+    .then(() => {
+      res.json({ message: "Successfully deleted" });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: "Internal server error" });
+    });
+});
+
+
+
+// router.delete('/deletePost:postId', verifyToken, (req, res) => {
+//   PostsModel.findOne({_id : req.params.postId })
+//   .populate("postedBy", "id")
+//   .exec((err, post)) => {
+//     if(err || !post) {
+//       return 
+//     }
+//     if(post.postedBy._id === req.user._id)
+//   }
+// })
+
 router.put('/like', verifyToken, (req, res) => {
     PostsModel.findByIdAndUpdate(req.body.postId, {
-        $push : {likes : req.user._id}
+      $addToSet: { likes : req.user._id }
     }, {
-        new : true
-    }).exec((err, result) => {
-        if (err) {
-            return res.status(422).json({ error : err })
-        } else {
-            res.json(result)
-        }
+      new: true
     })
-})
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.status(422).json({ error: err });
+    });
+  });
 
 
-router.put('/unlike', verifyToken, (req, res) => {
+  router.put('/unlike', verifyToken, (req, res) => {
     PostsModel.findByIdAndUpdate(req.body.postId, {
-        $push : {likes : req.user._id}
+      $pull: { likes: req.user._id }
     }, {
-        new : true
-    }).exec((err, result) => {
-        if (err) {
-            return res.status(422).json({ error : err })
-        } else {
-            res.json(result)
-        }
+      new: true
     })
-})
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.status(422).json({ error: err });
+    });
+  });
+
 export { router as postsRouter };
 
