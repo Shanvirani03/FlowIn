@@ -27,6 +27,7 @@ function Navbar() {
           <div className='navbar-menu'>
             {cookies.access_token ? (
               <>
+                <button> Search </button>
                 <Link to='/Profile' className='navbar-link'>Profile</Link>
                 <Link to='/JoinAMatch' className='navbar-link'>Lobbies</Link>
                 <Link to='/CollaborativeMode' className='navbar-link'>Collaborative Mode</Link>

@@ -34,6 +34,7 @@ export const Profile = () => {
       axios.get("http://localhost:3001/posts/allPosts")
         .then(response => {
           setPosts(response.data.posts);
+          console.log(response.data.posts)
         })
         .catch(error => {
           console.log(error);
