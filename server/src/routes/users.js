@@ -24,7 +24,7 @@ router.get('/user', verifyToken, async (req, res) => {
       const user = await UserModel.findOne({ _id: req.user._id }).select("-password");
       const posts = await PostsModel.find({ postedBy: req.params.id })
         .select("-password")
-        .populate("postedBy", "_id name");
+        .populate("postedBy", "_id name ");
       res.json({ user });
     } catch (err) {
       return res.status(404).json({ error: "User not found." });
@@ -72,6 +72,27 @@ router.put("/follow", verifyToken, async (req, res) => {
       res.json(currentUser);
     } catch (err) {
       return res.status(422).json({ error: err });
+    }
+  });
+
+  router.put("/changeBio", verifyToken, async (req, res) => {
+    try {
+      const userId = req.userId; // Assuming you have the user's ID available in the request
+    
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        userId,
+        { bio: req.body.bio }, // Update the bio field with the new value
+        { new: true } // Return the updated user object
+      );
+  
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      return res.json(updatedUser);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
     }
   });
   

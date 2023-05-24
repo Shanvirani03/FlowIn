@@ -1,6 +1,7 @@
 import express from 'express';
 import { PostsModel } from '../models/Posts.js';
 import { verifyToken } from '../../middleware/auth.js';
+import { verify } from 'crypto';
 
 const router = express.Router()
 
@@ -26,6 +27,22 @@ router.get('/allPosts', (req, res) => {
 });
 
 
+
+router.get('/getFollowing',verifyToken,(req,res)=>{
+
+  // if postedBy in following
+  PostsModel.find({postedBy:{$in:req.user.following}})
+  .populate("postedBy","_id name")
+  .populate("comments.postedBy","_id name")
+  .sort('-createdAt')
+  .then(posts=>{
+      res.json({posts})
+  })
+  .catch(err=>{
+      console.log(err)
+  })
+})
+
 router.get('/myPosts', verifyToken,(req, res) => {
     PostsModel.find({ postedBy : req.user.id })
         .then(posts => {
@@ -48,12 +65,11 @@ router.get('/myPosts', verifyToken,(req, res) => {
 });
 
 router.post('/createPost', verifyToken, (req,res) => {
-    const {title, body, _id} = req.body;
-    if(!title || !body) {
+    const { body} = req.body;
+    if(!body) {
         res.status(422).json({error: "Please complete all fields"})
     } 
     const post = new PostsModel({
-        title,
         body,
         postedBy: req.user.id
     })
@@ -61,7 +77,7 @@ router.post('/createPost', verifyToken, (req,res) => {
         res.json({ post : result });
     })
     .catch(err => {
-        console.log(err);
+        console.log("Please complete all fields");
     })
 })
 
@@ -116,6 +132,32 @@ router.put('/like', verifyToken, (req, res) => {
       res.status(422).json({ error: err });
     });
   });
+
+  router.put('/comment', verifyToken, (req, res) => {
+    const comment = {
+      text: req.body.text,
+      postedBy: req.user._id
+    };
+  
+    PostsModel.findByIdAndUpdate(
+      req.body.postId,
+      {
+        $push: { comments: comment }
+      },
+      {
+        new: true
+      }
+    )
+      .populate('comments.postedBy', '_id name')
+      .then(result => {
+        res.json(result);
+      })
+      .catch(err => {
+        res.status(422).json({ error: err });
+      });
+  });
+  
+
 
 export { router as postsRouter };
 

@@ -23,13 +23,56 @@ export const Profile = () => {
     const [currentUserId, setcurrentUserId] = useState("")
     const [data, setData] = useState([])
     const [myData, setMyData] = useState([])
+    const [profilePic, setProfilePic] = useState("")
+    
+
+    // const profilePicDetails = () => {
+    //   const data = new FormData()
+    //   data.append("file", image)
+    //   data.append("upload_preset", "Offtop")
+    //   data.append("cloud_name", "dsqcsq0oh")
+    //   fetch("https://api.cloudinary.com/v1_1/dsqcsq0oh/image/upload", {
+    //     method: "post",
+    //     body: data
+    //   })
+    //   .then(res=>res.json())
+    //   .then(data=>{
+    //     console.log(data)
+    //   })
+    //   .catch(err => {})
+    // }
+
+    const makeComment = (text, postId) => {
+      axios.put('/comment',
+          {
+            postId,
+            text
+          },
+          {
+            headers: {
+              Authorization: localStorage.getItem('jwt')
+            }
+          }
+        )
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    };
 
 
     const fetchPosts = () => {
       axios
-        .get("http://localhost:3001/posts/allPosts")
+        .get("http://localhost:3001/posts/allPosts", {
+          headers: {
+            Authorization: localStorage.getItem('jwt')
+          }
+        })
         .then((response) => {
           setData(response.data.posts);
+          console.log(data)
         })
         .catch((error) => {
           console.log(error);
@@ -84,20 +127,6 @@ export const Profile = () => {
       fetchUserProfile();
     }, []);
 
-    // useEffect(() => {
-    //   axios
-    //     .get("http://localhost:3001/users/user", {
-    //       headers: { Authorization: localStorage.getItem('jwt') },
-    //     })
-    //     .then((response) => {
-    //       setProfile(response.data);
-    //       console.log("USERPROFILE", userProfile)
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // }, []);
-
     
     const likePost = (id) => {
       try {
@@ -108,6 +137,8 @@ export const Profile = () => {
         )
         .then(response => {
           console.log(response.data);
+          fetchPosts();
+          fetchMyPosts();
         });
       } catch (err) {
         console.log(err);
@@ -123,6 +154,8 @@ export const Profile = () => {
         )
         .then(response => {
           console.log(response.data);
+          fetchPosts();
+          fetchMyPosts();
         });
       } catch (err) {
         console.log(err);
@@ -135,18 +168,17 @@ export const Profile = () => {
       try {
         const response = await axios.post(
           "http://localhost:3001/posts/createPost",
-          { title: title, body: body },
+          { body: body },
           { headers: { "Authorization": localStorage.getItem('jwt') } }
         );
         M.toast({html: "Post Sucessfully Created", classes:"#4Ja047 blue darker-1"})
         setShowCreatePostForm(false);
-        setTitle("");
         setBody("");
         fetchPosts();
         fetchMyPosts();
         fetchUserProfile();
       } catch (err) {
-        console.log(err);
+        M.toast({html: "You can not make a blank post", classes:"#4Ja047 blue darker-1"})
       }
     };
     
@@ -244,10 +276,6 @@ export const Profile = () => {
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, display: "flex", justifyContent: "center", alignItems: "center", zIndex: 999 }}>
               <form onSubmit={createPost} className="createPostForm" style={{ width: 600 }}>
               <div className="formGroup">
-                <label htmlFor="title">Title:</label>
-                <input type="text" id="title" value={title} onChange={(event) => setTitle(event.target.value)} />
-              </div>
-              <div className="formGroup">
                 <label htmlFor="body"> <textarea
                  style={{ backgroundColor: "white", color: 'black', height: '150px'}}
                  id="body" placeholder="What's on your mind?" 
@@ -275,11 +303,22 @@ export const Profile = () => {
                   minute: "2-digit",
                 })}</h6>
               <p style={{ marginBottom: 20 }}>{post.body}</p>
-              <div style={{ display: "flex" }}>
-                <div><i className="material-icons" style={{ marginBottom: 20 }}>favorite</i></div>
-                <div><i className="material-icons" style={{ marginBottom: 20 }}>comment</i></div>
-                <div><i className="material-icons" style={{ marginBottom: 20 }}>repeat</i></div>
-                <button><div><i className="material-icons" style={{ marginBottom: 20 }}>delete</i></div> </button>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", marginRight: 10 }}>
+              {post.likes.includes(state._id)? 
+                  <button onClick={()=>{unlikePost(post._id)}} style={{ backgroundColor: "black", color: "red", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+                    :
+                  <button onClick={()=>{likePost(post._id)}} style={{ backgroundColor: "black", color: "white", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+              }                
+              <p>{post.likes.length}</p>
+              </div>
+              <div style={{ marginLeft: -80, marginTop: 4 }}><i className="material-icons" style={{ marginBottom: 20 }}>comment</i></div>
+              <div style={{ marginLeft: -50, marginTop: 2 }}><i className="material-icons" style={{ marginBottom: 20 }}>repeat</i></div>
+              <button onClick={() => deletePost(post._id)} style={{ backgroundColor: "black", color: "white", border: "none", transition: "transform 0.3s" }}>
+                  <div style={{ marginLeft: "auto" }}>
+                    <i className="material-icons" style={{ marginBottom: 20 }}>delete</i>
+                  </div>
+                </button>
               </div>
               {/* <img src={post.photo} alt="Post" /> */}
             </div>
@@ -298,14 +337,17 @@ export const Profile = () => {
               <p style={{ marginBottom: 20 }}>{post.body}</p>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div style={{ display: "flex", alignItems: "center", marginRight: 10 }}>
-                <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i>
+                {post.likes.includes(state._id)? 
+                  <button onClick={()=>{unlikePost(post._id)}} style={{ backgroundColor: "black", color: "red", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+                    :
+                  <button onClick={()=>{likePost(post._id)}} style={{ backgroundColor: "black", color: "white", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+                }            
                 <p>{post.likes.length}</p>
               </div>
               <div style={{ marginLeft: -80, marginTop: 4 }}><i className="material-icons" style={{ marginBottom: 20 }}>comment</i></div>
               <div style={{ marginLeft: -50, marginTop: 2 }}><i className="material-icons" style={{ marginBottom: 20 }}>repeat</i></div>
               <button onClick={() => deletePost(post._id)} style={{ backgroundColor: "black", color: "white", border: "none", transition: "transform 0.3s" }}>
-                  <div style={{ marginLeft: "auto" }}>
-                    <i className="material-icons" style={{ marginBottom: 20 }}>delete</i>
+                  <div style={{ marginLeft: "auto" }}> {post.postedBy._id == state._id?  <i className="material-icons" style={{ marginBottom: 20 }}>delete</i> : <i className="material-icons" style={{ marginBottom: 20 }}>grain</i>}
                   </div>
                 </button>
               </div>
