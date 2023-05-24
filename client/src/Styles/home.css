@@ -1,9 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel&family=Foldit&display=swap');
+
 .landingPage {
     /* background-image: url('../assets/steamuserimages-a.akamaihd.jpg'); */
     height: 100vh;
     color: white;
     background-color: black;
     height: 30em;
+    font-family: 'Cinzel', serif;
+    font-family: 'Foldit', cursive;
 }
 
 .headerContainer {
@@ -37,7 +41,7 @@
   }
 
 .headerContainer h1 span {
-    color:red
+    color:rgb(19, 188, 166);
 }
 .headerContainer p {
     font-size: 1.5em;
@@ -51,7 +55,7 @@
     margin-top: 20px;
     padding: 10px 20px;
     border-radius: 5px;
-    background-color: red;
+    background-color: rgb(19, 188, 166);;
     color: white;
     border: none;
     cursor: pointer;

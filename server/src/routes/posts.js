@@ -88,18 +88,6 @@ router.delete("/deletePost/:postId", verifyToken, (req, res) => {
 });
 
 
-
-// router.delete('/deletePost:postId', verifyToken, (req, res) => {
-//   PostsModel.findOne({_id : req.params.postId })
-//   .populate("postedBy", "id")
-//   .exec((err, post)) => {
-//     if(err || !post) {
-//       return 
-//     }
-//     if(post.postedBy._id === req.user._id)
-//   }
-// })
-
 router.put('/like', verifyToken, (req, res) => {
     PostsModel.findByIdAndUpdate(req.body.postId, {
       $addToSet: { likes : req.user._id }

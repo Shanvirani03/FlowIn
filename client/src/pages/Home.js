@@ -6,10 +6,10 @@ function Home () {
     return ( 
         <div className='landingPage'>
             <div className='headerContainer'>
-                <h1>
+                <h1 style={{ fontSize: "10em", marginBottom: 10 }}>
                     O<span>FF</span>TOP
                 </h1>
-                <p>coming soon</p>
+                <h2 style={{ fontSize: "2em", marginTop: -10, marginBottom: 65  }}>coming soon</h2>
                 <Link to='/Login'>
                 <button> Start Rapping </button>
                 </Link>

@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../Styles/login.css';
 import showEyeIcon from '../assets/eye-open1.png';
 import hideEyeIcon from '../assets/eye-closed1.png';
 import axios from "axios";
 import { useCookies } from 'react-cookie';
-
+import M from "materialize-css";
+import { userContext } from '../App';
 
 function getPasswordBtnStyle(icon) {
   return {
@@ -21,6 +22,7 @@ function getPasswordBtnStyle(icon) {
 
 function Login(props) {
 
+  const {state, dispatch} = useContext(userContext)
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -48,41 +50,57 @@ function Login(props) {
         else {
             setCookies("access_token", response.data.token);
             console.log(response.data.token)
-            window.localStorage.setItem("userID", [response.data.user._id, response.data.user.email, response.data.user.followers, response.data.user.following]);
+            window.localStorage.setItem("user", JSON.stringify(response.data.user));
             window.localStorage.setItem("jwt", response.data.token);
+            dispatch({ type: "USER", payload: response.data.user });
+            M.toast({html: "Sucessfully Signed In", classes:"#4Ja047 green darker-1"})
             navigate("/Profile")
         }
 
     } catch (err) {
-        alert("Username or Password is incorrect")
+        M.toast({html: "Username or Password Incorrect", classes:"#4Ja047 green darker-1"})
     }
   };
 
   return (
-    <div className='login-container'>
-      <div className='header-container'>
-        <h1>
-          O<span>FF</span>TOP
-        </h1>
-      </div>
-      <div className='form-container'>
-        <form onSubmit={onSubmit}>
-          <div className="input-container">
-            <input className="text-input" type='text' placeholder='Username or Email' value={username} onChange={(e) => setUsername(e.target.value)} />
-          </div>
-          <div className="input-container">
-            <input className='password-input' type={showPassword ? 'text' : 'password'} placeholder='Password' 
-              value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button className="password-btn" type="button" style={buttonStyle} 
-                onClick={toggleShowPassword} aria-label="Toggle password visibility" />
-          </div>
-          <button type='submit'>Login</button>
-          <Link to='/Registration'>
-            <button type='button'>Sign Up</button>
-          </Link>
-        </form>
-      </div>
+    <div className="row">
+    <div className="head-container">
+      <h1 style={{ fontSize: "10em", marginBottom: 90 }}>O<span>FF</span>TOP</h1>
+      <h2 style={{ fontSize: "2em", marginBottom: 60, marginTop: -80 }}>Login</h2>
     </div>
+    <form className="col s12" onSubmit={onSubmit}>
+      <div className="row">
+        <div className="input-field col s12">
+          <i className="material-icons prefix">account_circle</i>
+          <input id="icon_prefix" 
+          type="text" 
+          className="validate" 
+          value={username} 
+          style={{ color : "white" }}
+          title='Username must be atleast 3 characters long'
+           onChange={(event) => setUsername(event.target.value)}
+          />
+          <label htmlFor="icon_prefix" style={{ color: "white" }}>Username</label>
+        </div>
+        <div className="input-field col s12">
+          <i className="material-icons prefix">lock</i>
+          <input id="icon_email"            
+            className="text-input"
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)} 
+            style={{ color : "white" }}/>
+          <label htmlFor="icon_email" style={{ color: "white" }}>Password</label>
+        </div>
+      </div>
+      <div className="submission center-align">
+        <button className="btn waves-effect waves-light" type="Register" name="action">Sign In
+          <i className="material-icons right">send</i>
+        </button>
+        <p style={{ marginTop: "10px", color: "white" }}>Don't have an account? <Link to="/Registration">Sign Up Here</Link>.</p>
+      </div>
+    </form>
+  </div>
   );
 }
 
