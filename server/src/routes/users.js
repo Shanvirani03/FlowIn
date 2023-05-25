@@ -77,12 +77,12 @@ router.put("/follow", verifyToken, async (req, res) => {
 
   router.put("/changeBio", verifyToken, async (req, res) => {
     try {
-      const userId = req.userId; // Assuming you have the user's ID available in the request
+      const userId = req.user._id;
     
       const updatedUser = await UserModel.findByIdAndUpdate(
         userId,
         { bio: req.body.bio }, // Update the bio field with the new value
-        { new: true } // Return the updated user object
+        { new: true }
       );
   
       if (!updatedUser) {

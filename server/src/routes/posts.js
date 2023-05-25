@@ -7,6 +7,7 @@ const router = express.Router()
 
 router.get('/allPosts', (req, res) => {
     PostsModel.find()
+        .sort({ date: -1})
         .then(posts => {
             if (!posts) {
                 return res.status(404).json({ error: 'No posts found' });
@@ -28,23 +29,31 @@ router.get('/allPosts', (req, res) => {
 
 
 
-router.get('/getFollowing',verifyToken,(req,res)=>{
+router.get('/getFollowing', verifyToken, (req, res) => {
+  const userId = req.user._id;
 
-  // if postedBy in following
-  PostsModel.find({postedBy:{$in:req.user.following}})
-  .populate("postedBy","_id name")
-  .populate("comments.postedBy","_id name")
-  .sort('-createdAt')
-  .then(posts=>{
-      res.json({posts})
+  PostsModel.find({
+    $or: [
+      { postedBy: { $in: req.user.following } }, // Posts from users being followed
+      { postedBy: userId }, // Posts created by the authenticated user
+    ]
   })
-  .catch(err=>{
-      console.log(err)
-  })
-})
+    .populate("postedBy", "_id username")
+    .populate("comments.postedBy", "_id username")
+    .sort( {date: -1} )
+    .then(posts => {
+      res.json({ posts });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: 'Server error' });
+    });
+});
+
 
 router.get('/myPosts', verifyToken,(req, res) => {
     PostsModel.find({ postedBy : req.user.id })
+        .sort({ date: -1})
         .then(posts => {
             if (!posts) {
                 return res.status(404).json({ error: 'No posts found' });

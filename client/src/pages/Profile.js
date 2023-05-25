@@ -42,6 +42,30 @@ export const Profile = () => {
     //   .catch(err => {})
     // }
 
+    const changeBio = (bio) => {
+      axios
+        .put(
+          "http://localhost:3001/users/changeBio",
+          {
+            bio,
+          },
+          {
+            headers: {
+              Authorization: localStorage.getItem('jwt'),
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.data);
+          fetchUserProfile()
+          console.log("USER PROFILE: ", userProfile)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    
+
     const makeComment = (text, postId) => {
       axios.put('/comment',
           {
@@ -65,7 +89,7 @@ export const Profile = () => {
 
     const fetchPosts = () => {
       axios
-        .get("http://localhost:3001/posts/allPosts", {
+        .get("http://localhost:3001/posts/getFollowing", {
           headers: {
             Authorization: localStorage.getItem('jwt')
           }
@@ -223,6 +247,20 @@ export const Profile = () => {
           });
       }
     };
+
+    const [showForm, setShowForm] = useState(false);
+
+    const handleButtonClick = () => {
+      setShowForm(true);
+    };
+  
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      // Extract the bio value from the form and call changeBio function
+      const newBio = event.target.elements.bio.value;
+      changeBio(newBio);
+      setShowForm(false); // Hide the form after submitting
+    };
     
     
     useEffect(() => {
@@ -241,6 +279,20 @@ export const Profile = () => {
         window.removeEventListener("scroll", handleCancel);
       };
     }, [showCreatePostForm]);
+
+    const [editingBio, setEditingBio] = useState(false)
+
+    const showBioForm = () => {
+      editingBio(true)
+    }
+
+    const saveBioForm = () => {
+      editingBio(false)
+    }
+
+    const handleCancel  = () => {
+      setShowForm(false)
+    }
     
     
     return (
@@ -251,6 +303,7 @@ export const Profile = () => {
             style={{ width: "160px", height:"180px", borderRadius:"80px", marginTop: 40, marginBottom: 20}} 
             src="https://images.unsplash.com/photo-1552058544-f2b08422138a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8MXwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=60"/>
         </div>
+
         <div class='col s8 black white-text' style={{ marginTop: 20 }}>
           <div>
             <h4>{userProfile && userProfile.user.username}</h4>
@@ -261,34 +314,48 @@ export const Profile = () => {
             <h5>{myData.length} Posts</h5>
           </div>
         </div>
-        <div class="col s8 black white-text" style={{ marginTop: 10}}> 
-            <p>This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio</p>
-        </div>
+        <div>
+      {showForm ? (
+        <form onSubmit={handleSubmit}>
+          <input type="text" name="bio" placeholder="Enter your new bio"  style={{ color: "white"}}/>
+          <button className="btn" type="submit">Save</button>
+          <button className="btn" type="cancel" onClick={handleCancel}>Cancel</button>
+        </form>
+      ) : (
+        <button className="col s6" onClick={handleButtonClick} style={{ backgroundColor: "black", border: "none", cursor: "pointer", transition: "opacity 0.3s"}}>
+          <div className="col s12 black white-text" style={{ marginTop: 10}}>
+            <h6 className="left-align">{userProfile && userProfile.user.bio}</h6>
+          </div>
+        </button>
+      )}
+    </div>
       </div>
       <div class="col s10 push-s1" style={{ backgroundColor: "black", display:'flex', justifyContent: 'center' }}>
         <ul style={{ display:'flex' }}>
         <button onClick={handleShowAllPosts} className="btn" type="Register" name="action">My Page</button>
-        <button onClick={handleShowUserPosts} className="btn" type="Register" name="action">My Page</button>
+        <button onClick={handleShowUserPosts} className="btn" type="Register" name="action">My Posts</button>
         <button onClick={setShowCreatePostForm} className="btn" type="Register" name="action"><i className="material-icons">create</i></button>
         </ul>
       </div>
       {showCreatePostForm && (
-        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, display: "flex", justifyContent: "center", alignItems: "center", zIndex: 999 }}>
-              <form onSubmit={createPost} className="createPostForm" style={{ width: 600 }}>
-              <div className="formGroup">
-                <label htmlFor="body"> <textarea
-                 style={{ backgroundColor: "white", color: 'black', height: '150px'}}
-                 id="body" placeholder="What's on your mind?" 
-                 value={body} onChange={(event) => setBody(event.target.value)}>
-                </textarea></label>
-              </div>
-              <div className="formActions">
-                <button type="submit" className="submitButton" style={{borderRadius:100, backgroundColor:"aqua"}}>Submit</button>
-                <button type="button" onClick={()=> setShowCreatePostForm(false)} style={{borderRadius:100, backgroundColor:"aqua"}} className="cancelButton"> Cancel</button>
-              </div>
-            </form>
+        <div className="fixed-overlay">
+          <form onSubmit={createPost} className="createPostForm">
+            <div className="input-field">
+              <textarea
+                id="body"
+                placeholder="What's on your mind?"
+                style={{ backgroundColor: "white", color: 'black', height: '150px' }}
+                value={body}
+                onChange={(event) => setBody(event.target.value)}
+              ></textarea>
+            </div>
+            <div className="formActions">
+              <button type="submit" className="btn waves-effect waves-light" style={{ borderRadius: 100 }}>Submit</button>
+              <button type="button" onClick={() => setShowCreatePostForm(false)} className="btn waves-effect waves-light" style={{ borderRadius: 100 }}>Cancel</button>
+            </div>
+          </form>
         </div>
-          )}
+      )}
       <div class="col s6 push-s3" style={{ backgroundColor: "black", color:'white', borderLeft: "1px solid grey",  borderRight: "1px solid grey" }} > 
       <div className="tweet">
         {showUserPosts ? (
