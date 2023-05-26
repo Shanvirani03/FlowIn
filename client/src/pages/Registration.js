@@ -35,19 +35,20 @@ function validateInput(username, email, password, confirmPassword) {
   const errors = {};
 
   if (!USER_REGEX.test(username)) {
-    errors.username = 'Invalid username format';
+    M.toast({html: "Invalid username format.", classes:"#4Ja047 blue darker-1"})
   }
 
   if (!email) {
-    errors.email = 'Email is required';
+    M.toast({html: "Email is required.", classes:"#4Ja047 blue darker-1"})
   }
 
   if (!PWD_REGEX.test(password)) {
-    errors.password = 'Invalid password format';
+    M.toast({html: "Invalid password formats.", classes:"#4Ja047 blue darker-1"})
   }
 
   if (password !== confirmPassword) {
-    errors.confirmPassword = 'Passwords do not match';
+    errors.confirmPassword = "Passwords do not match."
+    M.toast({html: "Passwords do not match.", classes:"#4Ja047 blue darker-1"})
   }
 
   return errors;
@@ -78,8 +79,14 @@ function Registration() {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-
+    const errors = validateInput(username, email, password, confirmPassword) 
+    if (Object.keys(errors).length > 0) {
+      setErrors(errors);
+    
     try {
+        if (validateInput) {
+          return;
+        }
         await axios.post("http://localhost:3001/auth/Registration", {
         username,
         password,
@@ -88,22 +95,21 @@ function Registration() {
         M.toast({html: "Successfully Registered", classes:"#4Ja047 green darker-1"})
         navigate('/Login')
     } catch (err) {
-        const errors = validateInput(username, email, password, confirmPassword) 
-        if (Object.keys(errors).length > 0) {
-          setErrors(errors);
-          return;
-        }
-        alert("Registration Unsuccessful");
+      console.log(err)
+      return;
     }
-};
+    }
+  };
 
 
 return (
   <div className="row">
-    <div className="head-container">
-      <h1 style={{ fontSize: "10em" }}>O<span>FF</span>TOP</h1>
-      <h2 style={{ fontSize: "2em", marginTop: -10, marginBottom: 65  }}>Registration</h2>
+  <div className="col s12 m6 offset-m3 center-align">
+    <div className="head-container" style={{ backgroundColor: "transparent" }}>
+      <h1 style={{ fontSize: "10em", marginBottom: 40 }}>O<span>FF</span>TOP</h1>
+      <h2 style={{ fontSize: "2em", marginBottom: 30, marginTop: -30 }}>Registration</h2>
     </div>
+  </div>
     <form className="col s12" onSubmit={onSubmit}>
       <div className="row">
         <div className="input-field col s12 m6">
@@ -147,11 +153,11 @@ return (
            title="Passwords must match"
            onChange={(event) => setConfirmPassword(event.target.value)} style={{ color: "white" }} />
           <label htmlFor="icon_confirm_password" style={{ color: "white" }}>Confirm Password</label> 
-            {errors.password && <p className="error">{errors.password}</p>}
+            {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
         </div>
       </div>
       <div className="submission center-align">
-        <button className="btn waves-effect waves-light" type="Register" name="action">Register
+        <button className="btn" type="Register" name="action">Register
           <i className="material-icons right">send</i>
         </button>
         <p style={{ marginTop: "10px", color: "white" }}>Already have an account? <Link to="/Login">Login here</Link>.</p>

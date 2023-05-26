@@ -51,6 +51,7 @@ router.get('/getFollowing', verifyToken, (req, res) => {
 });
 
 
+
 router.get('/myPosts', verifyToken,(req, res) => {
     PostsModel.find({ postedBy : req.user.id })
         .sort({ date: -1})
@@ -141,6 +142,20 @@ router.put('/like', verifyToken, (req, res) => {
       res.status(422).json({ error: err });
     });
   });
+
+  router.get('/viewPost/:id', async (req, res) => {
+    try {
+      const post = await PostsModel.findById(req.params.id).populate("postedBy", "_id username");
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+      return res.json(post);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+  
 
   router.put('/comment', verifyToken, (req, res) => {
     const comment = {

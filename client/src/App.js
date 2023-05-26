@@ -10,6 +10,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { createContext, useEffect, useReducer, useContext } from "react";
 import { initalState, reducer } from "./reducers/userReducer.js";
 import Home from "./pages/Home";
+import Post from "./pages/Post";
 
 export const userContext = createContext();
 
@@ -35,6 +36,7 @@ const Routing = () => {
     <Route path="/Registration" element={<Registration />} />
     <Route exact path="/Profile" element={<Profile />} />
     <Route path="/Profile/:userId" element={<OtherUsers />} />
+    <Route path="/Post/:postId" element={<Post />} />
     </Routes>
   )
 }

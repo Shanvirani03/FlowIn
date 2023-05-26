@@ -53,54 +53,66 @@ function Login(props) {
             window.localStorage.setItem("user", JSON.stringify(response.data.user));
             window.localStorage.setItem("jwt", response.data.token);
             dispatch({ type: "USER", payload: response.data.user });
-            M.toast({html: "Sucessfully Signed In", classes:"#4Ja047 green darker-1"})
+            M.toast({html: "Sucessfully Signed In", classes:"#4Ja047 blue darker-1"})
             navigate("/Profile")
         }
 
     } catch (err) {
-        M.toast({html: "Username or Password Incorrect", classes:"#4Ja047 green darker-1"})
+        M.toast({html: "Username or Password Incorrect", classes:"#4Ja047 blue darker-1"})
     }
   };
 
   return (
     <div className="row">
-    <div className="head-container">
-      <h1 style={{ fontSize: "10em", marginBottom: 90 }}>O<span>FF</span>TOP</h1>
-      <h2 style={{ fontSize: "2em", marginBottom: 60, marginTop: -80 }}>Login</h2>
+        <div className="col s12 m6 offset-m3 center-align">
+          <div className="head-container" style={{ backgroundColor: "transparent" }}>
+            <h1 style={{ fontSize: "10em", marginBottom: 40 }}>O<span>FF</span>TOP</h1>
+            <h2 style={{ fontSize: "2em", marginBottom: 30, marginTop: -40 }}>Login</h2>
+          </div>
+        </div>
+      <form className="col s12 m6 offset-m3" onSubmit={onSubmit}>
+        <div className="row">
+          <div className="input-field col s12">
+            <i className="material-icons prefix">account_circle</i>
+            <input
+              id="icon_prefix"
+              type="text"
+              className="validate"
+              value={username}
+              style={{ color: "white" }}
+              title="Username must be at least 3 characters long"
+              onChange={(event) => setUsername(event.target.value)}
+            />
+            <label htmlFor="icon_prefix" style={{ color: "white" }}>
+              Username
+            </label>
+          </div>
+          <div className="input-field col s12">
+            <i className="material-icons prefix">lock</i>
+            <input
+              id="icon_email"
+              className="text-input"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              style={{ color: "white" }}
+            />
+            <label htmlFor="icon_email" style={{ color: "white" }}>
+              Password
+            </label>
+          </div>
+        </div>
+        <div className="submission center-align">
+          <button className="btn waves-effect waves-light btn-large" type="submit" name="action">
+            Sign In
+            <i className="material-icons right">send</i>
+          </button>
+          <p style={{ marginTop: "10px", color: "white" }}>
+            Don't have an account? <Link to="/Registration">Sign Up Here</Link>.
+          </p>
+        </div>
+      </form>
     </div>
-    <form className="col s12" onSubmit={onSubmit}>
-      <div className="row">
-        <div className="input-field col s12">
-          <i className="material-icons prefix">account_circle</i>
-          <input id="icon_prefix" 
-          type="text" 
-          className="validate" 
-          value={username} 
-          style={{ color : "white" }}
-          title='Username must be atleast 3 characters long'
-           onChange={(event) => setUsername(event.target.value)}
-          />
-          <label htmlFor="icon_prefix" style={{ color: "white" }}>Username</label>
-        </div>
-        <div className="input-field col s12">
-          <i className="material-icons prefix">lock</i>
-          <input id="icon_email"            
-            className="text-input"
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)} 
-            style={{ color : "white" }}/>
-          <label htmlFor="icon_email" style={{ color: "white" }}>Password</label>
-        </div>
-      </div>
-      <div className="submission center-align">
-        <button className="btn waves-effect waves-light" type="Register" name="action">Sign In
-          <i className="material-icons right">send</i>
-        </button>
-        <p style={{ marginTop: "10px", color: "white" }}>Don't have an account? <Link to="/Registration">Sign Up Here</Link>.</p>
-      </div>
-    </form>
-  </div>
   );
 }
 

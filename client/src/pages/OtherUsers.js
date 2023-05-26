@@ -11,8 +11,6 @@ export const Profile = () => {
 
     const [profilePicture, setProfilePicture] = useState(null);
     const [backgroundPicture, setBackgroundPicture] = useState(null);
-    const [posts, setPosts] = useState([]);
-    const [myPosts, setMyPosts] = useState([]);
     const [showCreatePostForm, setShowCreatePostForm] = useState(false);
     const [showUserPosts, setShowUserPosts] = useState(false);
     const [title, setTitle] = useState("");
@@ -24,19 +22,24 @@ export const Profile = () => {
     const [showFollow, setshowFollow] = useState(true)
     const [currentUserId, setcurrentUserId] = useState("")
 
-    useEffect(() => {
+    const fetchUserProfile = () => {
       axios
         .get(`http://localhost:3001/users/user/${userId}`, {
-          headers: { Authorization: localStorage.getItem('jwt') },
+          headers: {"Authorization" : localStorage.getItem('jwt')}
         })
         .then((response) => {
+          console.log("USER PROFILE: ", userProfile)
           setProfile(response.data);
-          setMyPosts(response.data.posts);
         })
         .catch((error) => {
           console.log(error);
         });
+    };
+
+    useEffect(() => {
+      fetchUserProfile();
     }, []);
+
 
 
     useEffect(() => {
@@ -59,9 +62,9 @@ export const Profile = () => {
 
     
     useEffect(() => {
-        axios.get("http://localhost:3001/posts/allPosts")
+        axios.get("http://localhost:3001/posts/getFollowing")
           .then(response => {
-            setPosts(response.data.posts);
+            setProfile(response.data.posts);
           })
           .catch(error => {
             console.log(error);
@@ -81,6 +84,7 @@ export const Profile = () => {
             }
           )
           .then(response => {
+            fetchUserProfile()
             console.log(response.data);
           });
         } catch (err) {
@@ -95,6 +99,7 @@ export const Profile = () => {
             { headers: { "Authorization": localStorage.getItem('jwt')}}
           )
           .then(response => {
+            fetchUserProfile();
             console.log(response.data);
           });
         } catch (err) {
@@ -202,11 +207,11 @@ export const Profile = () => {
           console.log(err);
         }
       };
-      
+
       
       return (
         <div class="row">
-        <div class="col s10 push-s1" style={{ backgroundColor: "black",  borderBottom: "1px solid grey" }}>
+        <div class="col s10 push-s1" style={{ backgroundColor: "transparent",  borderBottom: "1px solid grey" }}>
           <div class="col s4" style={{color:'white'}}>
             <img class="responsive-img circle" 
               style={{ width: "160px", height:"180px", borderRadius:"80px", marginTop: 40, marginBottom: 20}} 
@@ -223,14 +228,14 @@ export const Profile = () => {
             </div>
           </div>
           <div class="col s8 black white-text" style={{ marginTop: 10}}> 
-              <p>This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio This is my Bio</p>
+              <p>{userProfile && userProfile.user.bio}</p>
           </div>
         </div>
-        <div class="col s10 push-s1" style={{ backgroundColor: "black", display:'flex' }}>
-          <div class="col s4 push-s2" style={{backgroundColor:'black'}}>
+        <div class="col s10 push-s1" style={{ backgroundColor: "transparent", display:'flex' }}>
+          <div class="col s4 push-s2" style={{backgroundColor:'transparent'}}>
               <ul style={{ display:'flex' }}>
-              <button onClick={handleShowAllPosts} className="btn" type="Register" name="action">My Page</button>
-              <button onClick={handleShowUserPosts} className="btn" type="Register" name="action">My Page</button>
+              <button onClick={handleShowAllPosts} className="btn" type="Register" name="action">{userProfile && userProfile.user.username}`s Page</button>
+              <button onClick={handleShowUserPosts} className="btn" type="Register" name="action">{userProfile && userProfile.user.username}'s Page</button>
             </ul>
           </div>
           <div class="col s2" style={{ backgroundColor:"black", marginTop:10}}>
@@ -262,58 +267,73 @@ export const Profile = () => {
               </form>
           </div>
             )}
-        <div class="col s6 push-s3" style={{ backgroundColor: "black", color:'white', borderLeft: "1px solid grey",  borderRight: "1px solid grey" }} > 
-        <div className="tweet">
-          {showUserPosts ? (
-            myPosts.map(post => (
-              <div key={post._id} className="tweet" style={{ marginTop: 10, borderBottom: "1px solid grey"}}>
-                <h6>{post.postedBy.username} ~ {" "}
-                  {new Date(post.date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}</h6>
-                <p style={{ marginBottom: 20 }}>{post.body}</p>
-                <div style={{ display: "flex" }}>
-                  <div><i className="material-icons" style={{ marginBottom: 20 }}>favorite</i></div>
-                  <div><i className="material-icons" style={{ marginBottom: 20 }}>comment</i></div>
-                  <div><i className="material-icons" style={{ marginBottom: 20 }}>repeat</i></div>
-                  <div><i className="material-icons" style={{ marginBottom: 20 }}>delete</i></div>
-                </div>
-                {/* <img src={post.photo} alt="Post" /> */}
+      <div class="col s6 push-s3" style={{ backgroundColor: "transparent", color:'white', borderLeft: "1px solid grey",  borderRight: "1px solid grey" }} > 
+      <div className="tweet">
+        {showUserPosts ? (
+          userProfile && userProfile.posts.map(post => (
+            
+            <div key={post._id} className="tweet" style={{ marginTop: 10, borderBottom: "1px solid grey"}}>
+              <h6>{userProfile && userProfile.user.username} ~ {" "}
+                {new Date(post.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}</h6>
+              <p style={{ marginBottom: 20 }}>{post.body}</p>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", marginRight: 10 }}>
+              {post.likes.includes(state._id)? 
+                  <button onClick={()=>{unlikePost(post._id)}} style={{ backgroundColor: "transparent", color: "red", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+                    :
+                  <button onClick={()=>{likePost(post._id)}} style={{ backgroundColor: "transparent", color: "white", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+              }                
+              <p>{post.likes.length}</p>
               </div>
-            ))
-          ) : (
-            posts.map(post => (
-              <div key={post._id} className="tweet" style={{ marginTop: 10, borderBottom: "1px solid grey"}}>
-                <h6>{post.postedBy.username} ~ {" "}
-                  {new Date(post.date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}</h6>
-                <p style={{ marginBottom: 20 }}>{post.body}</p>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div style={{ display: "flex", alignItems: "center", marginRight: 10 }}>
-                  <i className="material-icons" style={{ marginBottom: 20, marginRight: 5 }}>favorite</i>
-                  <p>{post.likes.length}</p>
-                </div>
-                <div style={{ marginLeft: 40, marginTop: 4 }}><i className="material-icons" style={{ marginBottom: 20 }}>comment</i></div>
-                <div style={{ marginLeft: 60, marginTop: 2 }}><i className="material-icons" style={{ marginBottom: 20 }}>repeat</i></div>
-                <div style={{ marginLeft: "auto" }}><i className="material-icons" style={{ marginBottom: 20 }}>delete</i></div>
+              <button>
+              <div style={{ marginLeft: -80, marginTop: 4 }}><i className="material-icons" style={{ color:"white", marginBottom: 20 }}>comment</i></div>
+              </button>
+              <div style={{ marginLeft: -50, marginTop: 2 }}><i className="material-icons" style={{ marginBottom: 20, marginRight: 20 }}>repeat</i></div>
               </div>
-                {/* <img src={post.photo} alt="Post" /> */}
+              {/* <img src={post.photo} alt="Post" /> */}
+            </div>
+           
+          ))
+        ) : (
+          userProfile && userProfile.posts.map(post => (
+            <div key={post._id} className="tweet" style={{ marginTop: 10, borderBottom: "1px solid grey"}}>
+              <h6>{userProfile && userProfile.user.username} ~ {" "}
+                {new Date(post.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}</h6>
+              <p style={{ marginBottom: 20 }}>{post.body}</p>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", marginRight: 10 }}>
+                {post.likes.includes(state._id)? 
+                  <button onClick={()=>{unlikePost(post._id)}} style={{ backgroundColor: "transparent", color: "red", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+                    :
+                  <button onClick={()=>{likePost(post._id)}} style={{ backgroundColor: "transparent", color: "white", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+                }            
+                <p>{post.likes.length}</p>
               </div>
-            ))
-          )}
-        </div>
+              <div style={{ marginLeft: -80, marginTop: 4 }}><i className="material-icons" style={{ marginBottom: 20 }}>comment</i></div>
+              <div style={{ marginLeft: -50, marginTop: 2 }}><i className="material-icons" style={{ marginBottom: 20 }}>repeat</i></div>
+              </div>
+              {/* <img src={post.photo} alt="Post" /> */}
+            </div>
+          ))
+        )}
       </div>
     </div>
-  );
+  </div>
+);
+
 }
+    
 
 export default Profile;

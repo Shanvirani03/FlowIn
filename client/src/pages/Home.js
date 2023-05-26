@@ -4,7 +4,7 @@ import '../Styles/home.css'
 
 function Home () {
     return ( 
-        <div className='landingPage'>
+        <div className='landingPage' style={{backgroundColor:'transparent'}}>
             <div className='headerContainer'>
                 <h1 style={{ fontSize: "10em", marginBottom: 10 }}>
                     O<span>FF</span>TOP

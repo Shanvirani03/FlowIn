@@ -64,27 +64,6 @@ export const Profile = () => {
           console.log(err);
         });
     }
-    
-
-    const makeComment = (text, postId) => {
-      axios.put('/comment',
-          {
-            postId,
-            text
-          },
-          {
-            headers: {
-              Authorization: localStorage.getItem('jwt')
-            }
-          }
-        )
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    };
 
 
     const fetchPosts = () => {
@@ -96,13 +75,21 @@ export const Profile = () => {
         })
         .then((response) => {
           setData(response.data.posts);
-          console.log(data)
         })
         .catch((error) => {
           console.log(error);
         });
     };
 
+    function getPost(postId) {
+      axios.get(`/viewPost/${postId}`)
+        .then(response => {
+          console.log(response.data); // Do something with the retrieved post data
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
 
     useEffect(() => {
       fetchPosts();
@@ -297,7 +284,7 @@ export const Profile = () => {
     
     return (
       <div class="row">
-      <div class="col s10 push-s1" style={{ backgroundColor: "black",  borderBottom: "1px solid grey" }}>
+      <div class="col s10 push-s1" style={{ backgroundColor: "transparent", borderBottom: "1px solid grey" }}>
         <div class="col s4" style={{color:'white'}}>
           <img class="responsive-img circle" 
             style={{ width: "160px", height:"180px", borderRadius:"80px", marginTop: 40, marginBottom: 20}} 
@@ -330,7 +317,7 @@ export const Profile = () => {
       )}
     </div>
       </div>
-      <div class="col s10 push-s1" style={{ backgroundColor: "black", display:'flex', justifyContent: 'center' }}>
+      <div class="col s10 push-s1" style={{ backgroundColor: "transparent", display:'flex', justifyContent: 'center' }}>
         <ul style={{ display:'flex' }}>
         <button onClick={handleShowAllPosts} className="btn" type="Register" name="action">My Page</button>
         <button onClick={handleShowUserPosts} className="btn" type="Register" name="action">My Posts</button>
@@ -356,11 +343,11 @@ export const Profile = () => {
           </form>
         </div>
       )}
-      <div class="col s6 push-s3" style={{ backgroundColor: "black", color:'white', borderLeft: "1px solid grey",  borderRight: "1px solid grey" }} > 
-      <div className="tweet">
+      <div class="col s6 push-s3" style={{ backgroundColor: "transparent", color:'white', borderLeft: "1px solid grey",  borderRight: "1px solid grey" }} > 
+      <div className="tweet" >
         {showUserPosts ? (
           myData && myData.map(post => (
-            <div key={post._id} className="tweet" style={{ marginTop: 10, borderBottom: "1px solid grey"}}>
+            <div key={post._id} className="tweet" style={{  marginTop: 10, borderBottom: "1px solid grey"}}>
               <h6>{post.postedBy?.username} ~ {" "}
                 {new Date(post.date).toLocaleDateString("en-US", {
                   year: "numeric",
@@ -373,9 +360,9 @@ export const Profile = () => {
               <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div style={{ display: "flex", alignItems: "center", marginRight: 10 }}>
               {post.likes.includes(state._id)? 
-                  <button onClick={()=>{unlikePost(post._id)}} style={{ backgroundColor: "black", color: "red", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+                  <button onClick={()=>{unlikePost(post._id)}} style={{ backgroundColor: "transparent", color: "red", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
                     :
-                  <button onClick={()=>{likePost(post._id)}} style={{ backgroundColor: "black", color: "white", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+                  <button onClick={()=>{likePost(post._id)}} style={{ backgroundColor: "transparent", color: "white", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
               }                
               <p>{post.likes.length}</p>
               </div>
@@ -405,9 +392,9 @@ export const Profile = () => {
               <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div style={{ display: "flex", alignItems: "center", marginRight: 10 }}>
                 {post.likes.includes(state._id)? 
-                  <button onClick={()=>{unlikePost(post._id)}} style={{ backgroundColor: "black", color: "red", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+                  <button onClick={()=>{unlikePost(post._id)}} style={{ backgroundColor: "transparent", color: "red", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
                     :
-                  <button onClick={()=>{likePost(post._id)}} style={{ backgroundColor: "black", color: "white", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+                  <button onClick={()=>{likePost(post._id)}} style={{ backgroundColor: "transparent", color: "white", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
                 }            
                 <p>{post.likes.length}</p>
               </div>
