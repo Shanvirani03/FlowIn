@@ -6,6 +6,7 @@ import pencilIcon from '../assets/icons8-pencil-50.png';
 import M from "materialize-css";
 import { userContext } from "../App";
 import { isRouteErrorResponse } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 export const Profile = () => {
@@ -24,6 +25,7 @@ export const Profile = () => {
     const [data, setData] = useState([])
     const [myData, setMyData] = useState([])
     const [profilePic, setProfilePic] = useState("")
+    const navigate = useNavigate()
     
 
     // const profilePicDetails = () => {
@@ -82,13 +84,7 @@ export const Profile = () => {
     };
 
     function getPost(postId) {
-      axios.get(`/viewPost/${postId}`)
-        .then(response => {
-          console.log(response.data); // Do something with the retrieved post data
-        })
-        .catch(error => {
-          console.log(error);
-        });
+
     }
 
     useEffect(() => {
@@ -249,6 +245,9 @@ export const Profile = () => {
       setShowForm(false); // Hide the form after submitting
     };
     
+    const viewPost = (postId) => {
+      navigate(`/Post/${postId}`)
+    }
     
     useEffect(() => {
       const handleCancel = () => {
@@ -355,7 +354,8 @@ export const Profile = () => {
                   day: "2-digit",
                   hour: "2-digit",
                   minute: "2-digit",
-                })}</h6>
+                })}
+              </h6>
               <p style={{ marginBottom: 20 }}>{post.body}</p>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div style={{ display: "flex", alignItems: "center", marginRight: 10 }}>
@@ -367,6 +367,7 @@ export const Profile = () => {
               <p>{post.likes.length}</p>
               </div>
               <div style={{ marginLeft: -80, marginTop: 4 }}><i className="material-icons" style={{ marginBottom: 20 }}>comment</i></div>
+    
               <div style={{ marginLeft: -50, marginTop: 2 }}><i className="material-icons" style={{ marginBottom: 20 }}>repeat</i></div>
               <button onClick={() => deletePost(post._id)} style={{ backgroundColor: "black", color: "white", border: "none", transition: "transform 0.3s" }}>
                   <div style={{ marginLeft: "auto" }}>
@@ -398,7 +399,10 @@ export const Profile = () => {
                 }            
                 <p>{post.likes.length}</p>
               </div>
-              <div style={{ marginLeft: -80, marginTop: 4 }}><i className="material-icons" style={{ marginBottom: 20 }}>comment</i></div>
+              <div style={{ marginLeft: -80, marginTop: 4, display:"flex" }} onClick={() => viewPost(post._id)}>
+                <i className="material-icons" style={{ marginBottom: 20 }}>comment</i>
+              <p style={{marginLeft: 10}}>{post.comments.length}</p>
+              </div>
               <div style={{ marginLeft: -50, marginTop: 2 }}><i className="material-icons" style={{ marginBottom: 20 }}>repeat</i></div>
               <button onClick={() => deletePost(post._id)} style={{ backgroundColor: "black", color: "white", border: "none", transition: "transform 0.3s" }}>
                   <div style={{ marginLeft: "auto" }}> {post.postedBy._id == state._id?  <i className="material-icons" style={{ marginBottom: 20 }}>delete</i> : <i className="material-icons" style={{ marginBottom: 20 }}>grain</i>}

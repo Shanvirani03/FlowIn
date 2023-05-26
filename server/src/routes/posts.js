@@ -2,6 +2,7 @@ import express from 'express';
 import { PostsModel } from '../models/Posts.js';
 import { verifyToken } from '../../middleware/auth.js';
 import { verify } from 'crypto';
+import { UserModel } from '../models/Users.js';
 
 const router = express.Router()
 
@@ -162,7 +163,7 @@ router.put('/like', verifyToken, (req, res) => {
       text: req.body.text,
       postedBy: req.user._id
     };
-  
+
     PostsModel.findByIdAndUpdate(
       req.body.postId,
       {
@@ -172,7 +173,8 @@ router.put('/like', verifyToken, (req, res) => {
         new: true
       }
     )
-      .populate('comments.postedBy', '_id name')
+      .populate('comments.postedBy', '_id username')
+      .populate("postedBy","_id username")
       .then(result => {
         res.json(result);
       })
@@ -180,6 +182,7 @@ router.put('/like', verifyToken, (req, res) => {
         res.status(422).json({ error: err });
       });
   });
+
   
 
 
