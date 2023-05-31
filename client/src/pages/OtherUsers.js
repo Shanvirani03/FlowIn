@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import "../Styles/profile.css"
 import axios from "axios";
 import pencilIcon from '../assets/icons8-pencil-50.png';
-import { useParams } from "react-router-dom";
+import { useParams, Navigate, useNavigate } from "react-router-dom";
 import { userContext } from "../App";
 
 
@@ -16,11 +16,12 @@ export const Profile = () => {
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
 
-    const [userProfile, setProfile] = useState(null)
-    const {state, dispatch} = useContext(userContext)
-    const {userId} = useParams()
-    const [showFollow, setshowFollow] = useState(true)
-    const [currentUserId, setcurrentUserId] = useState("")
+    const [userProfile, setProfile] = useState(null);
+    const {state, dispatch} = useContext(userContext);
+    const {userId} = useParams();
+    const [showFollow, setshowFollow] = useState(true);
+    const [currentUserId, setcurrentUserId] = useState("");
+    const navigate = useNavigate();
 
     const fetchUserProfile = () => {
       axios
@@ -208,14 +209,20 @@ export const Profile = () => {
         }
       };
 
+      const viewPost = (postId) => {
+        navigate(`/Post/${postId}`)
+      }
+
+
+      console.log("USER PROFILE: ", userProfile)
       
       return (
         <div class="row">
-        <div class="col s10 push-s1" style={{ backgroundColor: "transparent",  borderBottom: "1px solid grey" }}>
+        <div class="col s10 push-s1" style={{ backgroundColor: "black",  borderBottom: "1px solid grey" }}>
           <div class="col s4" style={{color:'white'}}>
             <img class="responsive-img circle" 
               style={{ width: "160px", height:"180px", borderRadius:"80px", marginTop: 40, marginBottom: 20}} 
-              src="https://images.unsplash.com/photo-1552058544-f2b08422138a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8MXwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=60"/>
+              src={userProfile && userProfile.user.profilePic}/>
           </div>
           <div class='col s8 black white-text' style={{ marginTop: 20 }}>
             <div>
@@ -231,15 +238,16 @@ export const Profile = () => {
               <p>{userProfile && userProfile.user.bio}</p>
           </div>
         </div>
-        <div class="col s10 push-s1" style={{ backgroundColor: "transparent", display:'flex' }}>
-          <div class="col s4 push-s2" style={{backgroundColor:'transparent'}}>
+        <div class="col s10 push-s1" style={{ backgroundColor: "black", display:'flex' }}>
+          <div class="col s4 push-s2" style={{backgroundColor:'black'}}>
               <ul style={{ display:'flex' }}>
-              <button onClick={handleShowAllPosts} className="btn" type="Register" name="action">{userProfile && userProfile.user.username}`s Page</button>
-              <button onClick={handleShowUserPosts} className="btn" type="Register" name="action">{userProfile && userProfile.user.username}'s Page</button>
+              <button onClick={handleShowAllPosts} className="btn" type="Register" name="action" style={{backgroundColor:"gold", color:'black'}}>Profile</button>
+              <button onClick={handleShowUserPosts} className="btn" type="Register" name="action" style={{backgroundColor:"gold", color:'black'}}>Posts</button>
             </ul>
           </div>
           <div class="col s2" style={{ backgroundColor:"black", marginTop:10}}>
             <button 
+              style={{backgroundColor:"gold", color:'black'}}
               onClick={userProfile && userProfile.user.followers.includes(currentUserId)? unFollowUser : followUser} 
               className="btn" type="Register" 
               name="action">{userProfile && userProfile.user.followers.includes(currentUserId)? "Following" : "Follow"}
@@ -267,11 +275,10 @@ export const Profile = () => {
               </form>
           </div>
             )}
-      <div class="col s6 push-s3" style={{ backgroundColor: "transparent", color:'white', borderLeft: "1px solid grey",  borderRight: "1px solid grey" }} > 
+      <div class="col s6 push-s3" style={{ backgroundColor: "black", color:'white', borderLeft: "1px solid grey",  borderRight: "1px solid grey" }} > 
       <div className="tweet">
         {showUserPosts ? (
           userProfile && userProfile.posts.map(post => (
-            
             <div key={post._id} className="tweet" style={{ marginTop: 10, borderBottom: "1px solid grey"}}>
               <h6>{userProfile && userProfile.user.username} ~ {" "}
                 {new Date(post.date).toLocaleDateString("en-US", {
@@ -291,9 +298,10 @@ export const Profile = () => {
               }                
               <p>{post.likes.length}</p>
               </div>
-              <button>
-              <div style={{ marginLeft: -80, marginTop: 4 }}><i className="material-icons" style={{ color:"white", marginBottom: 20 }}>comment</i></div>
-              </button>
+              <div style={{ marginLeft: -80, marginTop: 4, display: "flex" }} onClick={() => viewPost(post._id)}>
+                <i className="material-icons" style={{ color:"white", marginBottom: 20 }}>comment</i>
+                <p style={{ marginLeft : 5 }}>{post.comments.length}</p>
+              </div>
               <div style={{ marginLeft: -50, marginTop: 2 }}><i className="material-icons" style={{ marginBottom: 20, marginRight: 20 }}>repeat</i></div>
               </div>
               {/* <img src={post.photo} alt="Post" /> */}
@@ -321,7 +329,10 @@ export const Profile = () => {
                 }            
                 <p>{post.likes.length}</p>
               </div>
-              <div style={{ marginLeft: -80, marginTop: 4 }}><i className="material-icons" style={{ marginBottom: 20 }}>comment</i></div>
+              <div onClick = {() => viewPost(post._id)} style={{ marginLeft: -80, marginTop: 4, display : "flex" }}>
+                <i className="material-icons" style={{ marginBottom: 20 }}>comment</i>
+                <p style={{ marginLeft : 5 }}>{post.comments.length}</p>
+              </div>
               <div style={{ marginLeft: -50, marginTop: 2 }}><i className="material-icons" style={{ marginBottom: 20 }}>repeat</i></div>
               </div>
               {/* <img src={post.photo} alt="Post" /> */}

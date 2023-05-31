@@ -9,9 +9,9 @@ import { useContext } from "react";
 
 function Post() {
   const { postId } = useParams();
+  const { state, dispatch } = useContext(userContext);
   const [postDetails, setPostDetails] = useState(null);
   const [commentText, setCommentText] = useState("");
-  const { state, dispatch } = useContext(userContext);
   const [showCreatePostForm, setShowCreatePostForm] = useState(false);
 
 
@@ -19,7 +19,6 @@ function Post() {
     try {
       const response = await axios.get(`http://localhost:3001/posts/viewPost/${postId}`);
       setPostDetails(response.data);
-      console.log("POST DETAILS", postDetails)
     } catch (error) {
       console.log(error);
     }
@@ -28,12 +27,13 @@ function Post() {
   useEffect(() => {
     try {
       getPost(postId);
+      console.log("postDetails: ", postDetails)
     } catch (err) {
       console.log(err);
     }
   }, [postId]);
 
-  console.log("postDetails", postDetails);
+  console.log("post details: ", postDetails)
 
   const makeComment = async () => {
     try {
@@ -55,6 +55,27 @@ function Post() {
       console.error(error);
     }
   };
+
+  // const deletePost = async () => {
+  //   try {
+  //     const response = await axios.delete(
+  //       "http://localhost:3001/posts/deleteComment",
+  //       {
+  //         commentId,
+  //         text: commentText,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: localStorage.getItem("jwt"),
+  //         },
+  //       }
+  //     );
+  //     getPost(postId);
+  //     setCommentText("");
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   useEffect(() => {
     const modal = document.getElementById("comment-modal");
@@ -91,6 +112,14 @@ function Post() {
     }
   };
 
+  useEffect(() => {
+    try {
+      console.log("State: ", state)
+    } catch {
+      console.log("State: ", state)
+    }
+  })
+  
   
 
   return (
@@ -125,7 +154,6 @@ function Post() {
                 <i className="material-icons" style={{ marginBottom: 20, color: 'red'}} onClick={() => unlikePost(postDetails._id)} >favorite</i> 
                 : 
                 <i className="material-icons" style={{ marginBottom: 20, color: 'white' }} onClick={() => likePost(postDetails._id)}>favorite</i> }
-              {/* <i className="material-icons" style={{ marginBottom: 20 }}>favorite</i> */}
               <p style={{ marginLeft: 5 }}>{postDetails && postDetails.likes.length} </p>
             </div>
             <div style={{ display: "flex", alignItems: "center" }}>
@@ -175,7 +203,7 @@ function Post() {
             postDetails.comments.map((comment) => (
               <div key={comment._id}>
                 <div style={{ display: "flex", alignItems: "center", borderBottom:"1px solid grey" }}>
-                  <p>{comment._id}</p>
+                  <p>{comment.postedBy.username}</p>
                   <p style={{ marginLeft: 5 }}>{comment.text}</p>
                 </div>
               </div>

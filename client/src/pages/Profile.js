@@ -2,48 +2,24 @@ import React, { useContext } from "react";
 import { useState, useEffect } from "react";
 import "../Styles/profile.css"
 import axios from "axios";
-import pencilIcon from '../assets/icons8-pencil-50.png';
 import M from "materialize-css";
 import { userContext } from "../App";
-import { isRouteErrorResponse } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 
 export const Profile = () => {
 
-    const [profilePicture, setProfilePicture] = useState(null);
-    const [backgroundPicture, setBackgroundPicture] = useState(null);
     const [showCreatePostForm, setShowCreatePostForm] = useState(false);
     const [showUserPosts, setShowUserPosts] = useState(false);
-    const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
 
     const [userProfile, setProfile] = useState(null)
     const {state, dispatch} = useContext(userContext)
-    const [showFollow, setshowFollow] = useState(true)
-    const [currentUserId, setcurrentUserId] = useState("")
     const [data, setData] = useState([])
     const [myData, setMyData] = useState([])
-    const [profilePic, setProfilePic] = useState("")
+    const [image, setImage] = useState("")
     const navigate = useNavigate()
     
-
-    // const profilePicDetails = () => {
-    //   const data = new FormData()
-    //   data.append("file", image)
-    //   data.append("upload_preset", "Offtop")
-    //   data.append("cloud_name", "dsqcsq0oh")
-    //   fetch("https://api.cloudinary.com/v1_1/dsqcsq0oh/image/upload", {
-    //     method: "post",
-    //     body: data
-    //   })
-    //   .then(res=>res.json())
-    //   .then(data=>{
-    //     console.log(data)
-    //   })
-    //   .catch(err => {})
-    // }
-
     const changeBio = (bio) => {
       axios
         .put(
@@ -58,9 +34,7 @@ export const Profile = () => {
           }
         )
         .then((response) => {
-          console.log(response.data);
           fetchUserProfile()
-          console.log("USER PROFILE: ", userProfile)
         })
         .catch((err) => {
           console.log(err);
@@ -143,7 +117,6 @@ export const Profile = () => {
           { headers: { "Authorization": localStorage.getItem('jwt') } }
         )
         .then(response => {
-          console.log(response.data);
           fetchPosts();
           fetchMyPosts();
         });
@@ -160,7 +133,6 @@ export const Profile = () => {
           { headers: { "Authorization": localStorage.getItem('jwt') } }
         )
         .then(response => {
-          console.log(response.data);
           fetchPosts();
           fetchMyPosts();
         });
@@ -188,24 +160,7 @@ export const Profile = () => {
         M.toast({html: "You can not make a blank post", classes:"#4Ja047 blue darker-1"})
       }
     };
-    
-    const setBackground = (event) => {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        setBackgroundPicture(reader.result);
-      };
-    };
-    
-    const handleUpload = (event) => {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-      setProfilePicture(reader.result);
-      };
-    };
+
   
     const deletePost = (postId) => {
       const confirmed = window.confirm("Are you sure you want to delete this post?");
@@ -223,7 +178,6 @@ export const Profile = () => {
               html: "Post Successfully Deleted",
               classes: "#4Ja047 blue darker-1",
             });
-            console.log("DATA", newData);
           })
           .catch((error) => {
             console.log(error);
@@ -280,17 +234,78 @@ export const Profile = () => {
       setShowForm(false)
     }
     
-    
+    useEffect(() => {
+      if(image) {
+        const data = new FormData()
+        data.append("file", image)
+        data.append("upload_preset", "Offtop")
+        data.append("cloud_name", "dsqcsq0oh")
+        fetch("https://api.cloudinary.com/v1_1/dsqcsq0oh/image/upload", {
+          method: "post",
+          body: data
+        })
+        .then(res=>res.json())
+        .then(data=>{
+          localStorage.setItem("user", JSON.stringify({...state, profilePic : data.url}))
+          dispatch({type: "UPDATEPIC", payload: data.url})
+          
+          
+          axios.put('http://localhost:3001/users/updatePic', {
+            profilePic: data.url
+          }, {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": localStorage.getItem("jwt")
+            }
+          })
+            .then(response => {
+              console.log(response);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+
+          fetchUserProfile()
+          window.location.reload()
+        })
+        .catch(err => {})
+      }
+    }, [image])
+
+
+
+    const uploadPhoto = (file) => {
+      setImage(file)
+    }
+
+
     return (
       <div class="row">
-      <div class="col s10 push-s1" style={{ backgroundColor: "transparent", borderBottom: "1px solid grey" }}>
-        <div class="col s4" style={{color:'white'}}>
-          <img class="responsive-img circle" 
-            style={{ width: "160px", height:"180px", borderRadius:"80px", marginTop: 40, marginBottom: 20}} 
-            src="https://images.unsplash.com/photo-1552058544-f2b08422138a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8MXwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=60"/>
+      <div class="col s10 push-s1"   style={{backgroundColor: "black", borderBottom: "1px solid grey" }}>
+      <div className="col s4" style={{ color: 'white' }}>
+          <label htmlFor="profile-pic-input">
+            <img
+              className="responsive-img circle"
+              style={{
+                width: '210px',
+                height: '210px',
+                borderRadius: '80px',
+                marginTop: 40,
+                marginBottom: 20,
+                cursor: 'pointer'
+              }}
+              src={userProfile && userProfile.user.profilePic}
+              alt="Profile Picture"
+            />
+            <input
+              id="profile-pic-input"
+              type="file"
+              style={{ display: 'none' }}
+              onChange={(e) => uploadPhoto(e.target.files[0])}
+            />
+          </label>
         </div>
-
-        <div class='col s8 black white-text' style={{ marginTop: 20 }}>
+        <div class='col s8 white-text' style={{ marginTop: 20, background:"trasparent"}}>
           <div>
             <h4>{userProfile && userProfile.user.username}</h4>
           </div>
@@ -316,11 +331,11 @@ export const Profile = () => {
       )}
     </div>
       </div>
-      <div class="col s10 push-s1" style={{ backgroundColor: "transparent", display:'flex', justifyContent: 'center' }}>
+      <div class="col s10 push-s1" style={{ backgroundColor: "black", display:'flex', justifyContent: 'center' }}>
         <ul style={{ display:'flex' }}>
-        <button onClick={handleShowAllPosts} className="btn" type="Register" name="action">My Page</button>
-        <button onClick={handleShowUserPosts} className="btn" type="Register" name="action">My Posts</button>
-        <button onClick={setShowCreatePostForm} className="btn" type="Register" name="action"><i className="material-icons">create</i></button>
+        <button onClick={handleShowAllPosts} className="btn" type="Register" name="action" style={{backgroundColor:"gold", color:'black'}}>My Page</button>
+        <button onClick={handleShowUserPosts} className="btn" type="Register" name="action" style={{backgroundColor:"gold", color:'black'}}>My Posts</button>
+        <button onClick={setShowCreatePostForm} className="btn" type="Register" name="action" style={{backgroundColor:"gold", color:'black'}}><i className="material-icons">create</i></button>
         </ul>
       </div>
       {showCreatePostForm && (
@@ -342,12 +357,12 @@ export const Profile = () => {
           </form>
         </div>
       )}
-      <div class="col s6 push-s3" style={{ backgroundColor: "transparent", color:'white', borderLeft: "1px solid grey",  borderRight: "1px solid grey" }} > 
+      <div class="col s6 push-s3" style={{ backgroundColor: "black", color:'white', borderLeft: "1px solid grey",  borderRight: "1px solid grey" }} > 
       <div className="tweet" >
         {showUserPosts ? (
           myData && myData.map(post => (
             <div key={post._id} className="tweet" style={{  marginTop: 10, borderBottom: "1px solid grey"}}>
-              <h6>{post.postedBy?.username} ~ {" "}
+              <h6 style={{display:'flex'}}><img src={userProfile && userProfile.user.profilePic} style={{width: '60px', height: '60px' }}/> <div style={{marginLeft: "20px"}}>{post.postedBy?.username} ~ {" "}
                 {new Date(post.date).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "2-digit",
@@ -355,6 +370,7 @@ export const Profile = () => {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
+                 </div>
               </h6>
               <p style={{ marginBottom: 20 }}>{post.body}</p>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -375,20 +391,21 @@ export const Profile = () => {
                   </div>
                 </button>
               </div>
-              {/* <img src={post.photo} alt="Post" /> */}
             </div>
           ))
         ) : (
           data && data.map(post => (
             <div key={post._id} className="tweet" style={{ marginTop: 10, borderBottom: "1px solid grey"}}>
-              <h6>{post.postedBy?.username} ~ {" "}
+              <h6 style={{display:'flex'}}><img src={userProfile && userProfile.user.profilePic} style={{width: '60px', height: '60px' }}/> <div style={{marginLeft: "20px"}}>{post.postedBy?.username} ~ {" "}
                 {new Date(post.date).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "2-digit",
                   day: "2-digit",
                   hour: "2-digit",
                   minute: "2-digit",
-                })}</h6>
+                })}
+                 </div>
+              </h6>
               <p style={{ marginBottom: 20 }}>{post.body}</p>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div style={{ display: "flex", alignItems: "center", marginRight: 10 }}>

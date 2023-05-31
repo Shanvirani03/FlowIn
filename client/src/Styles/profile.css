@@ -7,9 +7,9 @@ i:hover {
   }
 
   body {
-    background-image: url('../assets/Concert1.jpeg');
-    background-size: cover;
-    background-position: center;
+    /* background-image: url('../assets/rappers.jpeg'); */
+    background-size: 80%;
+    background-position: -55% 100% ;
     background-repeat: no-repeat;
     background-attachment: fixed;
   }

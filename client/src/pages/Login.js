@@ -103,12 +103,12 @@ function Login(props) {
           </div>
         </div>
         <div className="submission center-align">
-          <button className="btn waves-effect waves-light btn-large" type="submit" name="action">
+          <button className="btn waves-effect waves-light btn-large" type="submit" name="action" style={{backgroundColor: 'gold', color: 'black'}}>
             Sign In
             <i className="material-icons right">send</i>
           </button>
           <p style={{ marginTop: "10px", color: "white" }}>
-            Don't have an account? <Link to="/Registration">Sign Up Here</Link>.
+            Don't have an account? <Link to="/Registration" style={{color:'gold'}}>Sign Up Here</Link>.
           </p>
         </div>
       </form>

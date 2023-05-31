@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel&family=Foldit&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Cinzel&family=Foldit&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel&family=Foldit&family=Rubik+Wet+Paint&display=swap');
 
 .head-container {
   display: flex;
@@ -7,12 +8,15 @@
   justify-content: center;
   background-color: black;
   color: white;
+  /* font-family: 'Cinzel', serif;
+  font-family: 'Foldit', cursive; */
   font-family: 'Cinzel', serif;
   font-family: 'Foldit', cursive;
+  font-family: 'Rubik Wet Paint', cursive;
 }
 
 .head-container span {
-  color: rgb(25, 221, 195);
+  color: gold;
 }
   
 /* label color */
@@ -27,7 +31,12 @@
 
 /* label underline focus color */
 .input-field input[type=text]:focus {
-  border-bottom: 1px solid #fff; /* Change the color to a contrasting value */
+  border-bottom: 1px solid gold !important; /* Change the color to a contrasting value */
+  box-shadow: 0 1px 0 0 #fff; /* Change the color to a contrasting value */
+}
+
+.input-field input[type=email]:focus {
+  border-bottom: 1px solid gold !important; /* Change the color to a contrasting value */
   box-shadow: 0 1px 0 0 #fff; /* Change the color to a contrasting value */
 }
 

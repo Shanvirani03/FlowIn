@@ -35,8 +35,8 @@ router.get('/getFollowing', verifyToken, (req, res) => {
 
   PostsModel.find({
     $or: [
-      { postedBy: { $in: req.user.following } }, // Posts from users being followed
-      { postedBy: userId }, // Posts created by the authenticated user
+      { postedBy: { $in: req.user.following } },
+      { postedBy: userId },
     ]
   })
     .populate("postedBy", "_id username")
@@ -75,7 +75,9 @@ router.get('/myPosts', verifyToken,(req, res) => {
         });
 });
 
+
 router.post('/createPost', verifyToken, (req,res) => {
+    console.log(req.user)
     const { body} = req.body;
     if(!body) {
         res.status(422).json({error: "Please complete all fields"})
@@ -91,6 +93,7 @@ router.post('/createPost', verifyToken, (req,res) => {
         console.log("Please complete all fields");
     })
 })
+
 
 router.delete("/deletePost/:postId", verifyToken, (req, res) => {
   PostsModel.findOne({ _id: req.params.postId })
@@ -143,10 +146,11 @@ router.put('/like', verifyToken, (req, res) => {
       res.status(422).json({ error: err });
     });
   });
+  
 
   router.get('/viewPost/:id', async (req, res) => {
     try {
-      const post = await PostsModel.findById(req.params.id).populate("postedBy", "_id username");
+      const post = await PostsModel.findById(req.params.id).populate("postedBy", "_id username").populate("comments.postedBy", "_id username");
       if (!post) {
         return res.status(404).json({ error: 'Post not found' });
       }
@@ -159,6 +163,7 @@ router.put('/like', verifyToken, (req, res) => {
   
 
   router.put('/comment', verifyToken, (req, res) => {
+
     const comment = {
       text: req.body.text,
       postedBy: req.user._id
@@ -173,9 +178,32 @@ router.put('/like', verifyToken, (req, res) => {
         new: true
       }
     )
-      .populate('comments.postedBy', '_id username')
+      .populate('comments.postedBy', "_id username")
       .populate("postedBy","_id username")
       .then(result => {
+        res.json(result);
+      })
+      .catch(err => {
+        res.status(422).json({ error: err });
+      });
+  });
+
+  router.delete('/deleteComment', verifyToken, (req, res) => {
+
+    console.log("LOGGING:", req.body)
+    const {postId, commentId} = req.body;
+
+    PostsModel.findByIdAndUpdate(
+      req.body.postId,
+      {
+        $pull: { comments: commentId }
+      },
+      {
+        new: true
+      }
+    )
+      .then(result => {
+        console.log("comment deleted")
         res.json(result);
       })
       .catch(err => {

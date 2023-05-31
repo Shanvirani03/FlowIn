@@ -1,7 +1,10 @@
 .brand-logo span {
-  color: rgb(25, 221, 195);
+  color: gold;
+}
+.nav-wrapper {
+  background-color: rgb(58, 58, 58)
 }
 
 .nav-wrapper ul li:hover a {
-  color: rgb(25, 221, 195); /* Replace with your desired font color */
+  color: goldenrod; /* Replace with your desired font color */
 }

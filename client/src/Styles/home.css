@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel&family=Foldit&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Cinzel&family=Foldit&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel&family=Foldit&family=Rubik+Wet+Paint&display=swap');
+
 
 .landingPage {
     /* background-image: url('../assets/steamuserimages-a.akamaihd.jpg'); */
@@ -6,8 +8,12 @@
     color: white;
     background-color: black;
     height: 30em;
+    /* font-family: 'Cinzel', serif;
+    font-family: 'Foldit', cursive; */
+    /* font-family: cursive; */
     font-family: 'Cinzel', serif;
     font-family: 'Foldit', cursive;
+    font-family: 'Rubik Wet Paint', cursive;
 }
 
 .headerContainer {
@@ -41,7 +47,7 @@
   }
 
 .headerContainer h1 span {
-    color:rgb(19, 188, 166);
+    color:gold;
 }
 .headerContainer p {
     font-size: 1.5em;

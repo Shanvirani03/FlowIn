@@ -79,27 +79,24 @@ function Registration() {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const errors = validateInput(username, email, password, confirmPassword) 
-    if (Object.keys(errors).length > 0) {
-      setErrors(errors);
-    
-    try {
-        if (validateInput) {
-          return;
-        }
+    const errors = validateInput(username, email, password, confirmPassword);
+    if (Object.keys(errors).length === 0) {
+      try {
         await axios.post("http://localhost:3001/auth/Registration", {
-        username,
-        password,
-        email
+          username,
+          password,
+          email
         });
-        M.toast({html: "Successfully Registered", classes:"#4Ja047 green darker-1"})
+        console.log('working')
+        M.toast({ html: "Successfully Registered", classes: "#4Ja047 blue darker-1" })
         navigate('/Login')
-    } catch (err) {
-      console.log(err)
-      return;
-    }
+      } catch (err) {
+        M.toast({html : "Username or Email already in use", classes: '#4Ja047 blue darker-1'})
+        console.log(err)
+      }
     }
   };
+  
 
 
 return (
@@ -157,10 +154,10 @@ return (
         </div>
       </div>
       <div className="submission center-align">
-        <button className="btn" type="Register" name="action">Register
+        <button className="btn waves-effect waves-light btn-large" type="submit" name="action" style={{backgroundColor: 'gold', color: 'black'}}>Register
           <i className="material-icons right">send</i>
         </button>
-        <p style={{ marginTop: "10px", color: "white" }}>Already have an account? <Link to="/Login">Login here</Link>.</p>
+        <p style={{ marginTop: "10px", color: "white" }}>Already have an account? <Link to="/Login" style={{color: 'gold'}}>Login here</Link>.</p>
       </div>
     </form>
   </div>

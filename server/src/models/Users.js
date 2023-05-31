@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema({
         },
       },
     password: {type: String, required: true},
-    profilePic: {type: String},
+    profilePic: {type: String, default: "https://images.unsplash.com/photo-1552058544-f2b08422138a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8MXwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=60" },
     followers: [{type: String}],
     following: [{type: String}],
     emailToken: {type: String},

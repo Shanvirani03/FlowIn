@@ -21,6 +21,29 @@ function Navbar() {
     M.Sidenav.init(document.querySelectorAll('.sidenav'));
   }, []);
 
+      // <div>
+    //   <div className="navbar-fixed">
+    //     <nav>
+    //       <div className="nav-wrapper">
+    //         <a href="#!" className="brand-logo center" style={{ fontFamily: 'cursive', fontSize: '2.5em' }}>View Beats</a>
+    //         <ul className="left">
+    //           <li>
+    //             <a href="#!">
+    //               <i className="material-icons">search</i> Search
+    //             </a>
+    //           </li>
+    //         </ul>
+    //         <ul className="right">
+    //           <li>
+    //             <a href="#!">
+    //               <i className="material-icons">cloud_upload</i> Upload Beat
+    //             </a>
+    //           </li>
+    //         </ul>
+    //       </div>
+    //     </nav>
+    //   </div>
+
   const renderList = () => {
     if (state) {
       return [
@@ -32,7 +55,7 @@ function Navbar() {
         <li key="2"><a href="/Profile">Profile</a></li>,
         <li key="3"><a href="/Post">Lobbies</a></li>,
         <li key="4"><a href="#">My Beats</a></li>,
-        <li key="5"><a href="#">View Beats</a></li>,
+        <li key="5"><a href="/Beats">View Beats</a></li>,
         <li key="6"><a onClick={logout}>LOGOUT</a></li>
       ];
     } else {
@@ -76,7 +99,7 @@ function Navbar() {
 
   return (
     <nav>
-      <div className="nav-wrapper" style={{ backgroundColor: 'grey' }}>
+      <div className="nav-wrapper">
         <a href={state ? "/Profile" : "/"} className="brand-logo left" style={{ marginLeft: 20 }}>O<span>FF</span>TOP</a>
         <a href="/" data-target="mobile-demo" className="sidenav-trigger right">
           <i className="material-icons">menu</i>

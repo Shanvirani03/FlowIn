@@ -24,7 +24,7 @@ router.get('/user', verifyToken, async (req, res) => {
       const user = await UserModel.findOne({ _id: req.user._id }).select("-password");
       const posts = await PostsModel.find({ postedBy: req.params.id })
         .select("-password")
-        .populate("postedBy", "_id name ");
+        .populate("postedBy", "_id name");
       res.json({ user });
     } catch (err) {
       return res.status(404).json({ error: "User not found." });
@@ -119,6 +119,19 @@ router.post("/searchUsers", (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     });
 });
+
+router.put("/updatePic", verifyToken, (req, res) => {
+  UserModel.findByIdAndUpdate(req.user._id, {$set: {profilePic: req.body.profilePic}}, {new: true})
+    .exec()
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.status(422).json({ error: "pic can not be uploaded" });
+    });
+});
+
+
 
 
 
