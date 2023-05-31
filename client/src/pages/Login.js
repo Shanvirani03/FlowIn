@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../Styles/login.css';
 import showEyeIcon from '../assets/eye-open1.png';
 import hideEyeIcon from '../assets/eye-closed1.png';
 import axios from "axios";
 import { useCookies } from 'react-cookie';
-
+import M from "materialize-css";
+import { userContext } from '../App';
 
 function getPasswordBtnStyle(icon) {
   return {
@@ -20,12 +21,12 @@ function getPasswordBtnStyle(icon) {
 }
 
 function Login(props) {
-  const [usernameOrEmail, setUsername] = useState('');
+
+  const {state, dispatch} = useContext(userContext)
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-
   const [_, setCookies] = useCookies(["access_token"])
-
   const navigate = useNavigate();
 
   const toggleShowPassword = () => {
@@ -33,60 +34,84 @@ function Login(props) {
   };
 
   const eyeIcon = showPassword ? hideEyeIcon : showEyeIcon;
-
   const buttonStyle = getPasswordBtnStyle(eyeIcon) 
   
   const onSubmit = async (event) => {
     event.preventDefault();
     try {
-        const response = await axios.post("http://localhost:3001/auth/login", {
-            usernameOrEmail,
-            password
+        const response = await axios.post("http://localhost:3001/auth/Login", {
+            username,
+            password,
         });
-    
-        console.log("response.data: ", response.data);
-        console.log("usernameOrEmail: ", usernameOrEmail)
-        console.log("password: ", password)
-        
+
         if (response.data.message) {
-            alert("Oob is alert.")
+            alert(response.data.message)
         }
         else {
             setCookies("access_token", response.data.token);
-            window.localStorage.setItem("userID", response.data.userID);
+            console.log(response.data.token)
+            window.localStorage.setItem("user", JSON.stringify(response.data.user));
+            window.localStorage.setItem("jwt", response.data.token);
+            dispatch({ type: "USER", payload: response.data.user });
+            M.toast({html: "Sucessfully Signed In", classes:"#4Ja047 blue darker-1"})
             navigate("/Profile")
         }
 
     } catch (err) {
-        console.log("oob has error");
-        console.error(err);
+        M.toast({html: "Username or Password Incorrect", classes:"#4Ja047 blue darker-1"})
     }
   };
 
   return (
-    <div className='login-container'>
-      <div className='header-container'>
-        <h1>
-          O<span>FF</span>TOP
-        </h1>
-      </div>
-      <div className='form-container'>
-        <form onSubmit={onSubmit}>
-          <div className="input-container">
-            <input className="text-input" type='text' placeholder='Username or Email' value={usernameOrEmail} onChange={(e) => setUsername(e.target.value)} />
+    <div className="row">
+        <div className="col s12 m6 offset-m3 center-align">
+          <div className="head-container" style={{ backgroundColor: "transparent" }}>
+            <h1 style={{ fontSize: "10em", marginBottom: 40 }}>O<span>FF</span>TOP</h1>
+            <h2 style={{ fontSize: "2em", marginBottom: 30, marginTop: -40 }}>Login</h2>
           </div>
-          <div className="input-container">
-            <input className='password-input' type={showPassword ? 'text' : 'password'} placeholder='Password' 
-              value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button className="password-btn" type="button" style={buttonStyle} 
-                onClick={toggleShowPassword} aria-label="Toggle password visibility" />
+        </div>
+      <form className="col s12 m6 offset-m3" onSubmit={onSubmit}>
+        <div className="row">
+          <div className="input-field col s12">
+            <i className="material-icons prefix">account_circle</i>
+            <input
+              id="icon_prefix"
+              type="text"
+              className="validate"
+              value={username}
+              style={{ color: "white" }}
+              title="Username must be at least 3 characters long"
+              onChange={(event) => setUsername(event.target.value)}
+            />
+            <label htmlFor="icon_prefix" style={{ color: "white" }}>
+              Username
+            </label>
           </div>
-          <button type='submit'>Login</button>
-          <Link to='/Registration'>
-            <button type='button'>Sign Up</button>
-          </Link>
-        </form>
-      </div>
+          <div className="input-field col s12">
+            <i className="material-icons prefix">lock</i>
+            <input
+              id="icon_email"
+              className="text-input"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              style={{ color: "white" }}
+            />
+            <label htmlFor="icon_email" style={{ color: "white" }}>
+              Password
+            </label>
+          </div>
+        </div>
+        <div className="submission center-align">
+          <button className="btn waves-effect waves-light btn-large" type="submit" name="action" style={{backgroundColor: 'gold', color: 'black'}}>
+            Sign In
+            <i className="material-icons right">send</i>
+          </button>
+          <p style={{ marginTop: "10px", color: "white" }}>
+            Don't have an account? <Link to="/Registration" style={{color:'gold'}}>Sign Up Here</Link>.
+          </p>
+        </div>
+      </form>
     </div>
   );
 }

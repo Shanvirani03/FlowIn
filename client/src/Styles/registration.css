@@ -1,150 +1,58 @@
-.registration-container {
+/* @import url('https://fonts.googleapis.com/css2?family=Cinzel&family=Foldit&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel&family=Foldit&family=Rubik+Wet+Paint&display=swap');
+
+.head-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 80vh;
-  background-color: rgb(0, 0, 0);
+  background-color: black;
   color: white;
-
-  position: relative;
-  background-image: url('../assets/music-beat3.gif');
-  /* background-repeat: no-repeat; */
-  background-size: 100% 100%;
-  /* background-size: cover; */
-  background-position: center center;
+  /* font-family: 'Cinzel', serif;
+  font-family: 'Foldit', cursive; */
+  font-family: 'Cinzel', serif;
+  font-family: 'Foldit', cursive;
+  font-family: 'Rubik Wet Paint', cursive;
 }
 
-@keyframes move {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 100% 0;
-  }
+.head-container span {
+  color: gold;
 }
   
-.error {
-  position: fixed;
-  top: 35%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: red;
-  color: white;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  z-index: 9999;
+/* label color */
+.input-field label {
+  color: #fff; /* Change the color to a contrasting value */
 }
 
-.header-container {
-  opacity: 0;
-  font-size: 3em;
-  animation: fadeIn 1s ease-in-out forwards;
+/* label focus color */
+.input-field input[type=text]:focus + label {
+  color: #fff; /* Change the color to a contrasting value */
 }
 
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-  
-.header-container span {
-  color: red;
+/* label underline focus color */
+.input-field input[type=text]:focus {
+  border-bottom: 1px solid gold !important; /* Change the color to a contrasting value */
+  box-shadow: 0 1px 0 0 #fff; /* Change the color to a contrasting value */
 }
 
-.form-container {
-  background-size: cover;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  color: black;
-  border-color: red;
-  width: 800px;
-  height: 250px;
-  background-color: transparent;
-
-  opacity: 0;
-  animation: fadeIn 1s ease-in-out forwards;
+.input-field input[type=email]:focus {
+  border-bottom: 1px solid gold !important; /* Change the color to a contrasting value */
+  box-shadow: 0 1px 0 0 #fff; /* Change the color to a contrasting value */
 }
 
-.header-container p {
-  font-size: x-large;
-  text-align: center;
+/* valid color */
+.input-field input[type=text].valid {
+  border-bottom: 1px solid #fff; /* Change the color to a contrasting value */
+  box-shadow: 0 1px 0 0 #fff; /* Change the color to a contrasting value */
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+/* invalid color */
+.input-field input[type=text].invalid {
+  border-bottom: 1px solid #fff; /* Change the color to a contrasting value */
+  box-shadow: 0 1px 0 0 #fff; /* Change the color to a contrasting value */
 }
 
-.text-input {
-  display: flex;
-  position: relative;
-  /* left: 28%; */
-  margin-right: 10px;
-  margin-bottom: 20px; /* Add some vertical space */
-  padding: 10px;
-  border: 1px solid rgb(90, 90, 90);
-  border-radius: 5px;
-  font-size: 1.2em;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.3);
-  width: 40%;
+/* icon prefix focus color */
+.input-field .prefix.active {
+  color: #fff; /* Change the color to a contrasting value */
 }
-
-.password-input {
-  display: flex;
-  position: relative;
-  margin-right: 10px;
-  margin-left: 40px;
-  margin-bottom: 20px; /* Add some vertical space */
-  padding: 10px;
-  border: 1px solid rgb(90, 90, 90);
-  border-radius: 5px;
-  font-size: 1.2em;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.3);
-  width: 40%;
-}
-
-input::placeholder {
-  color: white;
-}
-
-button {
-  margin-bottom: 20px; /* Add some vertical space */
-  padding: 10px 20px;
-  border-radius: 5px;
-  background-color: red;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2em;
-}
-
-.submit-btn:hover{
-  transform: scale(1.1);
-}
-
-.input-container {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-}
-  
-.password-btn {
-  display: inline;
-  position: relative;
-  z-index: 2;
-  /* color: white; */
-  background-color: transparent;
-}
-
-  

@@ -1,165 +1,58 @@
-.profilePage {
-    min-height: 150vh;
-    background-color: black;
-    color: white;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+i:hover {
+    transform: scale(1.1);
   }
-  
-  .profileHeader {
-    background-color: grey;
-    height: 220px;
-  }
-  
-  .profilePicture {
-    background-color: white;
-    width: 250px;
-    height: 250px;
-    margin-left: 30px;
-    margin-top: -120px;
-    position: absolute;
-    z-index: 1;
-    border-radius: 40px;
-  }
-  
-  .info {
-    background-color: black;
-    height: 80px;
-    /* position: relative; */
-    display: flex;
-    z-index: 2;
-    margin-top: 0px;
-    border-bottom: 1px solid grey;
-    text-align: center;
-  }
-  
-  .info .Feed {
-    /* background-color: red; */
-    margin-left: 375px;
-  }
-  
-  .info .Feed h1 {
-    margin-top: 5px;
-  }
-  
-  .info h1 {
-    margin-top: 5px;;
-  }
-  
-  .info h2 {
-    margin-top: -20px;
-  }
-  
-  .info .Feed {
-    /* background-color: white; */
-  }
-  
-  .info .Followers{
-    margin-left: 30px;
-    /* background-color: white; */
-  }
-  
-  .info .Following{
-    margin-left: 30px;
-    /* background-color: white; */
-  }
-  
-  .info .wins{
-    margin-left: 30px;
-    /* background-color: white; */
-  }
-  
-  .info .editProfile {
-    margin-top: 20px;
-    margin-left: 300px;
-    margin-bottom: 30px;
-    background-color: black;
-    height: fit-content;
-    font-size: smaller;
-  }
-  
-  .myPosts {
-    background-color: black;
-    padding: 5px;
-    height: 50px;
-    display: flex;
-    width: 655px;
-    margin-left: 370px;
-    text-align: center;
-    border-bottom: 0.3px solid rgb(57, 57, 57);
-  }
-  
-  .myPosts button {
-    border-color: black;
-    color: rgb(253, 71, 71);
-    height: 50px;
-    background-color: black;
-  }
-  
-  .myPosts .page h1 {
-    margin-left: 10px;
-    margin-top: 0px;
-    font-size: x-large;
-  
-  }
-  
-  .myPosts .posts h1 {
-    margin-left: 10px;
-    margin-top: 0px;
-    font-size: x-large;
-  }
-  
-  .personalInfo {
-    color: grey;
-    background-color: black;
-    width: 320px;
-    height: 300px;
-    padding: 20px;
-  }
-  
-  .personalInfo h1 {
-    margin-top: 0px;
-    margin-left: 20px;
-  }
-  
-  .tweets {
-    background-color: black;
-    width: 665px;
-    height: 400px;
-    margin-left: 370px;
-    margin-top: -320px;
-  }
-  
-  .Friends {
-    background: black;
-    text-align: center;
-    width: 375px;
-    margin-left: 1050px;
-    height: 500px;
-    margin-top: -490px;
-    border-left: 0.3px solid rgb(57, 57, 57);
-  }
-  
-  .Friends h1 {
+
+  .liked {
     color: red;
   }
-  
-  .friendsContainer {
+
+  body {
+    /* background-image: url('../assets/rappers.jpeg'); */
+    background-size: 80%;
+    background-position: -55% 100% ;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  .fixed-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
-    margin-left: 80px;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.5);
   }
   
-  .activeNow {
-    margin-left: 70px;
+  .createPostForm {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
   }
   
-  .editProfileButton {
-    background-color: red;
-    height: 30px
+  .input-field textarea {
+    background-color: #fff;
+    color: #000;
+    height: 150px;
+    padding: 10px;
   }
   
-  .editProfileButton h1 {
-    font-size: small;
-    margin-top: -1px;
-    
+  .formActions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
   }
   
+  .btn {
+    border-radius: 100px;
+    background-color: rgb(23, 132, 132);
+  }
+  
+  .btn waves-effect waves-light {
+    background-color: rgb(23, 132, 132);
+  }
