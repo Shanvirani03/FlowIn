@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import '../Styles/ViewBeats.css';
 import M from 'materialize-css';
+import axios from 'axios';
 
 
 const BeatStore = () => {
 
   const [beats, setBeats] = useState([]);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [file, setFile] = useState("")
 
   useEffect(() => {
     // Fetch beats from the server and update the beats state
@@ -53,6 +57,34 @@ const BeatStore = () => {
   useEffect(() => {
     M.AutoInit();
   }, []);
+
+  
+  const uploadBeat = async () => {
+
+    try {
+      const response = await axios.post(
+        'http://localhost:3001/beats/uploadBeat',
+        {
+          name: name,
+          description: description,
+          file: file
+        },
+        {
+          headers: {
+            "Authorization": localStorage.getItem("jwt")
+          }
+        }
+      );
+  
+      console.log(response.data);
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
+
+  
 
   return (
     <div>
