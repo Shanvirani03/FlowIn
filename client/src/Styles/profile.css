@@ -1,58 +1,97 @@
 i:hover {
-    transform: scale(1.1);
-  }
+  transform: scale(1.1);
+}
 
-  .liked {
-    color: red;
-  }
+.liked {
+  color: red;
+}
 
-  body {
-    /* background-image: url('../assets/rappers.jpeg'); */
-    background-size: 80%;
-    background-position: -55% 100% ;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-  }
+body {
+  /* background-image: url('../assets/rappers.jpeg'); */
+  background-size: 80%;
+  background-position: -55% 100% ;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
 
-  .fixed-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
+.fixed-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.5);
+}
   
-  .createPostForm {
-    width: 100%;
-    max-width: 600px;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 5px;
-  }
+.createPostForm {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 5px;
+}
   
-  .input-field textarea {
-    background-color: #fff;
-    color: #000;
-    height: 150px;
-    padding: 10px;
-  }
-  
-  .formActions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-  }
-  
-  .btn {
-    border-radius: 100px;
-    background-color: rgb(23, 132, 132);
-  }
-  
-  .btn waves-effect waves-light {
-    background-color: rgb(23, 132, 132);
-  }
+.input-field textarea {
+  background-color: #fff;
+  color: #000;
+  height: 150px;
+  padding: 10px;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn {
+  border-radius: 100px;
+  background-color: rgb(23, 132, 132);
+}
+
+.btn waves-effect waves-light {
+  background-color: rgb(23, 132, 132);
+}
+
+.edit-btn {
+  border-radius: 100px;
+  background-color: rgb(23, 132, 132);
+}
+
+.edit-btn waves-effect waves-light {
+  background-color: rgb(23, 132, 132);
+}
+
+.followers-text-span {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 20px;
+}
+
+.following-text-span {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 20px;
+}
+
+.posts-text-span {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 20px;
+}
+
+.followers-text-header:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.following-text-header:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.posts-text-header:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}

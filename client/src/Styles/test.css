@@ -1,0 +1,23 @@
+.drippy-text {
+    font-size: 48px;
+    position: relative;
+    display: inline-block;
+    animation: drippy-animation 2s ease-in-out infinite;
+}
+
+@keyframes drippy-animation {
+  0% {
+    text-shadow: 0 0 5px #ff0000, 0 0 20px #ff0000;
+    transform: translateY(0);
+  }
+  50% {
+    text-shadow: 0 0 5px #ff0000, 0 0 20px #ff0000, 0 0 50px #ff0000;
+    transform: translateY(-10px);
+  }
+  100% {
+    text-shadow: 0 0 5px #ff0000, 0 0 20px #ff0000, 0 0 50px #ff0000, 0 0 100px #ff0000;
+    transform: translateY(0);
+  }
+}
+
+  

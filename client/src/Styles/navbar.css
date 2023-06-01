@@ -1,6 +1,41 @@
-.brand-logo span {
+.brand-logo {
+  color: #fff;
+  justify-self: flex-start;
+  cursor: pointer;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.navbar-logo-letter1 {
+  color: white;
+}
+
+.navbar-logo-letter2 {
   color: gold;
 }
+
+.navbar-logo-letter1 {
+  color: white;
+}
+
+.brand-logo:hover span:nth-child(1) {
+  color: gold;
+  transition: all 0.2s ease-out;
+}
+
+.brand-logo:hover span:nth-child(2) {
+  color: white;
+  transition: all 0.2s ease-out;
+}
+
+.brand-logo:hover span:nth-child(3) {
+  color: gold;
+  transition: all 0.2s ease-out;
+}
+
+
 .nav-wrapper {
   background-color: rgb(58, 58, 58)
 }
@@ -8,3 +43,4 @@
 .nav-wrapper ul li:hover a {
   color: goldenrod; /* Replace with your desired font color */
 }
+

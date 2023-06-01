@@ -1,35 +1,15 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import '../Styles/registration.css';
 import { Link, useNavigate } from 'react-router-dom';
-import showEyeIcon from '../assets/eye-open1.png';
-import hideEyeIcon from '../assets/eye-closed1.png';
 import axios from 'axios'
 import M from "materialize-css";
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
-function getPasswordBtnStyle(icon) {
-  return {
-    backgroundImage: `url(${icon})`,
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-    backgroundSize: 'contain',
-    width: '30px',
-    height: '30px',
-    cursor: 'pointer',
-  };
-}
-
-function setPasswordEyeIcons(showPassword, showConfirmPassword) {
-  const eyeIcon1 = showPassword ? hideEyeIcon : showEyeIcon;
-  const buttonStyle1 = getPasswordBtnStyle(eyeIcon1)  
-  const eyeIcon2 = showConfirmPassword ? hideEyeIcon : showEyeIcon;
-  const buttonStyle2 = getPasswordBtnStyle(eyeIcon2) 
-  return [buttonStyle1, buttonStyle2]
-
-}
 
 function validateInput(username, email, password, confirmPassword) {
   const errors = {};
@@ -65,17 +45,20 @@ function Registration() {
 
   const navigate = useNavigate();
 
-  const toggleShowPassword = () => {
+  useEffect(() => {
+    setUsername('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+  }, []);
+
+  const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const toggleShowConfirmPassword = () => {
+  const toggleConfirmPasswordVisibility = () => {
     setConfirmShowPassword(!showConfirmPassword)
-  }
-
-  const buttonStyles = setPasswordEyeIcons(showPassword, showConfirmPassword); 
-  const buttonStyle1 = buttonStyles[0];
-  const buttonStyle2 = buttonStyles[1];
+  };
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -100,67 +83,146 @@ function Registration() {
 
 
 return (
-  <div className="row">
-  <div className="col s12 m6 offset-m3 center-align">
-    <div className="head-container" style={{ backgroundColor: "transparent" }}>
-      <h1 style={{ fontSize: "10em", marginBottom: 40 }}>O<span>FF</span>TOP</h1>
-      <h2 style={{ fontSize: "2em", marginBottom: 30, marginTop: -30 }}>Registration</h2>
+  
+  <div className='registraion-container'>
+    <div className="row">
+
+      <div className="col s12 m6 offset-m3 center-align">
+        <div className="reg-head-container" style={{ backgroundColor: "transparent" }}>
+          <h1 style={{ fontSize: "10em", marginBottom: 40 }}>O<span>FF</span>TOP</h1>
+          <h2 style={{ fontSize: "2em", marginBottom: 30, marginTop: -30 }}>Registeration</h2>
+        </div>
+      </div>
+          
+      <form className="col s12 m6 offset-m3" onSubmit={onSubmit}>
+        <div className="row">
+
+          <div className="input-field col s12">
+            <i className="material-icons prefix"
+              onClick={() =>
+                M.toast({
+                  html: "Username must contain at least 3 characters.",
+                })
+                }>account_circle</i>
+            <input
+              id="icon_username"
+              type="text"
+              className="validate"
+              value={username}
+              style={{ color: "white" }}
+              title="Username must be at least 3 characters long"
+              onChange={(event) => setUsername(event.target.value)}
+              autoComplete="new-username"
+            />
+            {errors.username && <p className="error">{errors.username}</p>}
+            <label htmlFor="icon_username" style={{ color: "white" }}>
+              Username
+            </label>
+          </div>
+
+          <div className="input-field col s12">
+            <i className="material-icons prefix" 
+            onClick={() =>
+              M.toast({
+                html: "Email must be valid.",
+              })
+              }>email</i>
+            <input
+              id="icon_email"
+              type="email"
+              className="text-input"
+              value={email}
+              style={{ color: "white" }}
+              onChange={(event) => setEmail(event.target.value)}
+              autoComplete="new-email"
+            />
+            {errors.email && <p className="error">{errors.email}</p>}
+            <label htmlFor="icon_email" style={{ color: "white" }}>
+              Email
+            </label>
+          </div>
+
+          <div className="input-field col s12">
+            <i className="material-icons prefix" 
+              onClick={() =>
+                M.toast({
+                  html: "Password must contain at least 8 characters, including lowercase, uppercase, numeric, and special character(s).",
+                  displayLength: 6000
+                })
+              }>lock</i>
+            <input
+              id="icon_password"
+              className="password-input"
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              style={{ color: "white" }}
+              autoComplete="new-password"
+            />
+            <span
+              style={{margin: 10}}
+              className={`toggle-password ${showPassword ? 'visible' : ''}`}
+              onClick={togglePasswordVisibility}>
+              {showPassword ? 
+                (<FaEyeSlash style={{ color: 'gray' }} />) : (<FaEye style={{ color: 'gray' }} />)
+              }
+            </span>
+
+            <label htmlFor="icon_password" style={{ color: "white" }}>
+              Password
+            </label>
+          </div>
+
+          <div className="input-field col s12">
+            <i className="material-icons prefix"
+              onClick={() =>
+                M.toast({
+                  html: "Passwords must match.",
+                })
+              }
+            >lock</i>
+            <input
+              id="icon_confirm_password"
+              className="password-input"
+              type={showConfirmPassword ? 'text' : 'password'} 
+              title="Passwords must match"
+              value={confirmPassword}
+              style={{ color: "white" }}
+              onChange={(event) => setConfirmPassword(event.target.value)} 
+              autoComplete="new-confirm-password"
+            />
+            <span
+              style={{margin: 10}}
+              className={`toggle-confirm-password ${showConfirmPassword ? 'visible' : ''}`}
+              onClick={toggleConfirmPasswordVisibility}>
+              {showConfirmPassword ? 
+                (<FaEyeSlash style={{ color: 'gray' }} />) : (<FaEye style={{ color: 'gray' }} />)
+              }
+            </span>
+
+            <label htmlFor="icon_confirm_password" 
+              style={{ color: "white" }}>Confirm Password
+            </label> 
+          </div>
+        </div>
+
+        <div className="submission center-align">
+          <button className="btn waves-effect waves-light btn-large" type="submit" name="action" 
+            style={{backgroundColor: 'gold', color: 'black'}}>
+              SIGN UP <i className="material-icons right">send</i>
+          </button>
+          <p style={{ margin: "25px", color: "white" }}>Already have an account?
+            <Link to="/Login"> 
+              <button className='login-btn' style={{color: 'gold'}}>Login here</button>
+            </Link>
+          </p>
+        </div>
+            
+
+      </form>
     </div>
   </div>
-    <form className="col s12" onSubmit={onSubmit}>
-      <div className="row">
-        <div className="input-field col s12 m6">
-          <i className="material-icons prefix">account_circle</i>
-          <input id="icon_prefix" 
-          type="text"
-           className="validate"
-           value={username} 
-            title='Username must be atleast 3 characters long'
-            style={{ color : "white" }}
-            onChange={(event) => setUsername(event.target.value)}
-          />
-          {errors.username && <p className="error">{errors.username}</p>}
-          <label htmlFor="icon_prefix" style={{ color: "white" }}>Username</label>
-        </div>
-        <div className="input-field col s12 m6">
-          <i className="material-icons prefix">email</i>
-          <input id="icon_email"             
-            className="text-input"
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            style={{ color: "white" }} />
-          <label htmlFor="icon_email" style={{ color: "white" }}>Email</label>
-        </div>
-        <div className="input-field col s12 m6">
-          <i className="material-icons prefix">lock</i>
-          <input id="icon_password" 
-          type={showPassword ? 'text' : 'password'}
-          className="password-input" 
-          value={password}  
-          title="Password must contain at least 8 characters, including uppercase, lowercase, numbers, and special characters" 
-          style={{ color : "white" }}
-          onChange={(event) => setPassword(event.target.value)}/>
-          <label htmlFor="icon_password" style={{ color: "white" }}>Password</label> 
-          {errors.password && <p className="error">{errors.password}</p>}
-        </div>
-        <div className="input-field col s12 m6">
-          <i className="material-icons prefix">lock</i>
-          <input id="icon_confirm_password" type="password" className="password-input" value={confirmPassword} 
-           title="Passwords must match"
-           onChange={(event) => setConfirmPassword(event.target.value)} style={{ color: "white" }} />
-          <label htmlFor="icon_confirm_password" style={{ color: "white" }}>Confirm Password</label> 
-            {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
-        </div>
-      </div>
-      <div className="submission center-align">
-        <button className="btn waves-effect waves-light btn-large" type="submit" name="action" style={{backgroundColor: 'gold', color: 'black'}}>Register
-          <i className="material-icons right">send</i>
-        </button>
-        <p style={{ marginTop: "10px", color: "white" }}>Already have an account? <Link to="/Login" style={{color: 'gold'}}>Login here</Link>.</p>
-      </div>
-    </form>
-  </div>
+
 );
 
 }

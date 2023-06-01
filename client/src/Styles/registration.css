@@ -1,7 +1,7 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Cinzel&family=Foldit&display=swap'); */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel&family=Foldit&family=Rubik+Wet+Paint&display=swap');
 
-.head-container {
+.reg-head-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -15,7 +15,7 @@
   font-family: 'Rubik Wet Paint', cursive;
 }
 
-.head-container span {
+.reg-head-container span {
   color: gold;
 }
   
@@ -52,7 +52,115 @@
   box-shadow: 0 1px 0 0 #fff; /* Change the color to a contrasting value */
 }
 
+.input-field .prefix {
+  color: #fff; /* Change the color to a contrasting value */
+  cursor: pointer;
+}
+
 /* icon prefix focus color */
 .input-field .prefix.active {
   color: #fff; /* Change the color to a contrasting value */
+  cursor: pointer;
 }
+
+
+.input-helper-icon {
+  vertical-align: middle;
+  margin-left: 5px;
+  color: gray;
+  cursor: pointer;
+}
+
+.reg-head-container{
+    /* background-image: url('../assets/signup_background.gif'); */
+    background-image: url('../assets/registration_background.gif');
+    background-repeat: no-repeat;
+    /* background-size: contain; */
+    background-size: 20% auto;
+    background-position: center;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+.input-field {
+  margin-bottom: 25px;
+}
+
+label {
+  margin-bottom: 5px;
+}
+
+input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.toggle-password.visible {
+  color: #007bff;
+}
+
+.toggle-confirm-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.toggle-confirm-password.visible {
+  color: #007bff;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.submission {
+  padding: 15px;
+}
+
+.login-btn {
+  padding: 10px;
+  background-color: transparent;
+  transition: transform 0.3s ease;
+  font-family: 'Rubik Wet Paint', cursive;
+}
+
+.login-btn:hover {
+  transform: scale(1.2);
+  background-color: transparent;
+  font-family: 'Rubik Wet Paint', cursive;
+}
+
+

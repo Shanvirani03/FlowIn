@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useParams, useNavigate } from "react-router-dom";
 import { createContext, useEffect, useReducer, useContext } from "react";
 import { initalState, reducer } from "./reducers/userReducer.js";
+import Test from "./pages/Test";
 import Home from "./pages/Home";
 import Post from "./pages/Post";
 import Login from "./pages/Login";
@@ -33,6 +34,7 @@ const Routing = () => {
   return (
     <Routes>
     <Route path="/" element={<Home />} />
+    <Route path="/Test" element={<Test />} />
     <Route path="/Login" element={<Login />} />
     <Route path="/Registration" element={<Registration />} />
     <Route exact path="/Profile" element={<Profile />} />

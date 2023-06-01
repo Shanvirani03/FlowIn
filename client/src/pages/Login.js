@@ -7,18 +7,7 @@ import axios from "axios";
 import { useCookies } from 'react-cookie';
 import M from "materialize-css";
 import { userContext } from '../App';
-
-function getPasswordBtnStyle(icon) {
-  return {
-    backgroundImage: `url(${icon})`,
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-    backgroundSize: 'contain',
-    width: '30px',
-    height: '30px',
-    cursor: 'pointer',
-  };
-}
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 function Login(props) {
 
@@ -29,13 +18,10 @@ function Login(props) {
   const [_, setCookies] = useCookies(["access_token"])
   const navigate = useNavigate();
 
-  const toggleShowPassword = () => {
+  const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const eyeIcon = showPassword ? hideEyeIcon : showEyeIcon;
-  const buttonStyle = getPasswordBtnStyle(eyeIcon) 
-  
   const onSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -70,12 +56,14 @@ function Login(props) {
             <h2 style={{ fontSize: "2em", marginBottom: 30, marginTop: -40 }}>Login</h2>
           </div>
         </div>
+        
       <form className="col s12 m6 offset-m3" onSubmit={onSubmit}>
+
         <div className="row">
           <div className="input-field col s12">
             <i className="material-icons prefix">account_circle</i>
             <input
-              id="icon_prefix"
+              id="icon_username"
               type="text"
               className="validate"
               value={username}
@@ -83,35 +71,52 @@ function Login(props) {
               title="Username must be at least 3 characters long"
               onChange={(event) => setUsername(event.target.value)}
             />
-            <label htmlFor="icon_prefix" style={{ color: "white" }}>
+            <label htmlFor="icon_username" style={{ color: "white" }}>
               Username
             </label>
           </div>
+
           <div className="input-field col s12">
             <i className="material-icons prefix">lock</i>
             <input
-              id="icon_email"
-              className="text-input"
-              type="password"
+              id="icon_password"
+              className="password-input"
+              type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               style={{ color: "white" }}
             />
-            <label htmlFor="icon_email" style={{ color: "white" }}>
+            <span
+              style={{margin: 10}}
+              className={`toggle-password ${showPassword ? 'visible' : ''}`}
+              onClick={togglePasswordVisibility}>
+              {showPassword ? 
+                (<FaEyeSlash style={{ color: 'gray' }} />) : (<FaEye style={{ color: 'gray' }} />)
+              }
+            </span>
+
+            <label htmlFor="icon_password" style={{ color: "white" }}>
               Password
             </label>
           </div>
+
         </div>
+
         <div className="submission center-align">
           <button className="btn waves-effect waves-light btn-large" type="submit" name="action" style={{backgroundColor: 'gold', color: 'black'}}>
             Sign In
             <i className="material-icons right">send</i>
           </button>
-          <p style={{ marginTop: "10px", color: "white" }}>
-            Don't have an account? <Link to="/Registration" style={{color:'gold'}}>Sign Up Here</Link>.
+          <p style={{ margin: "25px", color: "white" }}>
+            Don't have an account? 
+            <Link to="/Registration"> 
+              <button className='signup-btn' style={{color: 'gold'}}>Sign up here</button>
+            </Link>
           </p>
         </div>
+
       </form>
+
     </div>
   );
 }

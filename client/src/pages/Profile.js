@@ -12,6 +12,12 @@ export const Profile = () => {
     const [showCreatePostForm, setShowCreatePostForm] = useState(false);
     const [showUserPosts, setShowUserPosts] = useState(false);
     const [body, setBody] = useState("");
+    const [editMode, setEditMode] = useState(false);
+
+    const [bio, setBio] = useState(''); 
+    const [username, setUsername] = useState('');
+    const [tempUserName, setTempUserName] = useState('');
+    const [tempBio, setTempBio] = useState('');
 
     const [userProfile, setProfile] = useState(null)
     const {state, dispatch} = useContext(userContext)
@@ -19,6 +25,32 @@ export const Profile = () => {
     const [myData, setMyData] = useState([])
     const [image, setImage] = useState("")
     const navigate = useNavigate()
+
+    const handleEditClick = () => {
+      setTempUserName(username);
+      setTempBio(bio)
+      setEditMode(true);
+    };
+  
+    const handleSaveClick = () => {
+      setUsername(tempUserName);
+      setBio(tempBio)
+      setEditMode(false);
+      // Perform save operation or update the data in some way
+    };
+
+    const handleCancelClick = () => {
+      setEditMode(false);
+    };
+
+    const handleUserNameChange = (e) => {
+      setTempUserName(e);
+    };
+
+    const handleBioChange = (e) => {
+      setTempBio(e);
+    }
+
     
     const changeBio = (bio) => {
       axios
@@ -281,158 +313,227 @@ export const Profile = () => {
 
     return (
       <div class="row">
-      <div class="col s10 push-s1"   style={{backgroundColor: "black", borderBottom: "1px solid grey" }}>
-      <div className="col s4" style={{ color: 'white' }}>
-          <label htmlFor="profile-pic-input">
-            <img
-              className="responsive-img circle"
-              style={{
-                width: '210px',
-                height: '210px',
-                borderRadius: '80px',
-                marginTop: 40,
-                marginBottom: 20,
-                cursor: 'pointer'
-              }}
-              src={userProfile && userProfile.user.profilePic}
-              alt="Profile Picture"
-            />
-            <input
-              id="profile-pic-input"
-              type="file"
-              style={{ display: 'none' }}
-              onChange={(e) => uploadPhoto(e.target.files[0])}
-            />
-          </label>
-        </div>
-        <div class='col s8 white-text' style={{ marginTop: 20, background:"trasparent"}}>
+
+        <div class="col s10 push-s1"   style={{backgroundColor: "black", borderBottom: "1px solid grey", padding: '20px' }}>
+
+          <div className="col s4" style={{ color: 'white', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
+            <label htmlFor="profile-pic-input">
+              <img
+                className="responsive-img circle"
+                style={{
+                  width: '210px',
+                  height: '210px',
+                  borderRadius: '80px',
+                  marginTop: 40,
+                  marginBottom: 20,
+                  cursor: 'pointer'
+                }}
+                src={userProfile && userProfile.user.profilePic}
+                alt="Profile Picture"
+              />
+              <input
+                id="profile-pic-input"
+                type="file"
+                style={{ display: 'none' }}
+                onChange={(e) => uploadPhoto(e.target.files[0])}
+              />
+            </label>
+            
+            <div style={{ marginTop: 'auto' }}>
+              {
+                editMode? (
+                  <>
+                    <button className="edit-btn"
+                      style={{ backgroundColor: "gold", color: 'black', margin: 10 }} onClick={handleSaveClick}>
+                      Save
+                    </button>
+                    <button className="edit-btn"
+                      style={{ backgroundColor: "gold", color: 'black', margin: 10 }} onClick={handleCancelClick}>
+                      Cancel
+                    </button>
+                  </>
+                ) : 
+                (<button className="edit-btn" 
+                  style={{ backgroundColor: "gold", color: 'black', margin: 10 }} onClick={handleEditClick}> 
+                  Edit Profile 
+                </button>)
+              }
+            </div>
+
+          </div>
+
+
+          <div class='col s8 white-text' style={{ marginTop: 20, background:"trasparent"}}>
+            <div>
+            {editMode ? (
+              <input
+                type="text"
+                className="username-input"
+                placeholder={(userProfile && userProfile.user.username)}
+                // value={(userProfile && userProfile.user.username) || ''}
+                style={{ color: "black", paddingRight: '25px', paddingLeft: '25px', backgroundColor: 'white'}}
+                onChange={(event) => handleUserNameChange(event.target.value)} />) : 
+                ( <h4 style={{ paddingRight: '25px', paddingLeft: '25px' }}>{userProfile && userProfile.user.username}</h4> )
+              }
+            </div>
+            <div style={{ display:'flex', paddingTop: 3 }}>
+              <h5 className="followers-text-header" style={{ paddingRight: '25px', paddingLeft: '25px'}}> 
+                <span style={{fontFamily: '"Segoe UI", Arial, sans-serif', fontSize: '30px'}}>{userProfile && userProfile.user.followers.length} </span>
+                <span className="followers-text-span">Followers</span> 
+              </h5>
+              <h5 className="following-text-header" style={{ paddingRight: '25px', paddingLeft: '25px'}}>
+                <span style={{fontFamily: '"Segoe UI", Arial, sans-serif', fontSize: '30px'}}>{userProfile && userProfile.user.following.length} </span>
+                <span className="following-text-span">Following</span> 
+              </h5>
+              <h5 className="posts-text-header" style={{paddingRight: '25px', paddingLeft: '25px'}}>
+                <span style={{fontFamily: '"Segoe UI", Arial, sans-serif', fontSize: '30px'}}>{myData.length} </span>
+                <span className="posts-text-span">Posts</span>
+              </h5>
+            </div>
+          </div>
+
+          <div class='col s8 white-text'>
+
+            {editMode? (
+              <input
+              type="text"
+              className="bio-input"
+              placeholder="Bio"
+              // placeholder={(userProfile && userProfile.user.username)}
+              // value={(userProfile && userProfile.user.username) || ''}
+              style={{ color: "black", paddingRight: '25px', paddingLeft: '25px', backgroundColor: 'white', textAlign: 'left', verticalAlign: 'top'}}
+              onChange={(event) => handleBioChange(event.target.value)} />
+            ) :
+              (<p style={{paddingRight: '25px', paddingLeft: '25px'}}> Bio </p>)
+            }
+            
+          </div>
+
+{/* 
           <div>
-            <h4>{userProfile && userProfile.user.username}</h4>
-          </div>
-          <div style={{ display:'flex', marginTop: 3 }}>
-            <h5 style={{ paddingRight: '20px' }}>{userProfile && userProfile.user.followers.length} Followers</h5>
-            <h5 style={{ paddingRight: '20px' }}>{userProfile && userProfile.user.following.length} Following</h5>
-            <h5>{myData.length} Posts</h5>
-          </div>
+            {showForm ? (
+              <form onSubmit={handleSubmit}>
+                <input type="text" name="bio" placeholder="Enter your new bio"  style={{ color: "white"}}/>
+                <button className="btn" type="submit">Save</button>
+                <button className="btn" type="cancel" onClick={handleCancel}>Cancel</button>
+              </form>
+            ) : (
+              <button className="col s6" onClick={handleButtonClick} style={{ backgroundColor: "black", border: "none", cursor: "pointer", transition: "opacity 0.3s"}}>
+                <div className="col s12 black white-text" style={{ marginTop: 10}}>
+                  <h6 className="left-align">{userProfile && userProfile.user.bio}</h6>
+                </div>
+              </button>
+            )}
+          </div> */}
+
         </div>
-        <div>
-      {showForm ? (
-        <form onSubmit={handleSubmit}>
-          <input type="text" name="bio" placeholder="Enter your new bio"  style={{ color: "white"}}/>
-          <button className="btn" type="submit">Save</button>
-          <button className="btn" type="cancel" onClick={handleCancel}>Cancel</button>
-        </form>
-      ) : (
-        <button className="col s6" onClick={handleButtonClick} style={{ backgroundColor: "black", border: "none", cursor: "pointer", transition: "opacity 0.3s"}}>
-          <div className="col s12 black white-text" style={{ marginTop: 10}}>
-            <h6 className="left-align">{userProfile && userProfile.user.bio}</h6>
-          </div>
-        </button>
-      )}
-    </div>
-      </div>
-      <div class="col s10 push-s1" style={{ backgroundColor: "black", display:'flex', justifyContent: 'center' }}>
-        <ul style={{ display:'flex' }}>
-        <button onClick={handleShowAllPosts} className="btn" type="Register" name="action" style={{backgroundColor:"gold", color:'black'}}>My Page</button>
-        <button onClick={handleShowUserPosts} className="btn" type="Register" name="action" style={{backgroundColor:"gold", color:'black'}}>My Posts</button>
-        <button onClick={setShowCreatePostForm} className="btn" type="Register" name="action" style={{backgroundColor:"gold", color:'black'}}><i className="material-icons">create</i></button>
-        </ul>
-      </div>
-      {showCreatePostForm && (
-        <div className="fixed-overlay">
-          <form onSubmit={createPost} className="createPostForm">
-            <div className="input-field">
-              <textarea
-                id="body"
-                placeholder="What's on your mind?"
-                style={{ backgroundColor: "white", color: 'black', height: '150px' }}
-                value={body}
-                onChange={(event) => setBody(event.target.value)}
-              ></textarea>
-            </div>
-            <div className="formActions">
-              <button type="submit" className="btn waves-effect waves-light" style={{ borderRadius: 100 }}>Submit</button>
-              <button type="button" onClick={() => setShowCreatePostForm(false)} className="btn waves-effect waves-light" style={{ borderRadius: 100 }}>Cancel</button>
-            </div>
-          </form>
+
+        <div class="col s10 push-s1" style={{ backgroundColor: "black", display:'flex', justifyContent: 'center' }}>
+          <ul style={{ display:'flex' }}>
+          <button onClick={handleShowAllPosts} className="btn" type="Register" name="action" style={{backgroundColor:"gold", color:'black', margin: 10}}>My Page</button>
+          <button onClick={handleShowUserPosts} className="btn" type="Register" name="action" style={{backgroundColor:"gold", color:'black', margin: 10}}>My Posts</button>
+          <button onClick={setShowCreatePostForm} className="btn" type="Register" name="action" style={{backgroundColor:"gold", color:'black', margin: 10}}><i className="material-icons">create</i></button>
+          </ul>
         </div>
-      )}
-      <div class="col s6 push-s3" style={{ backgroundColor: "black", color:'white', borderLeft: "1px solid grey",  borderRight: "1px solid grey" }} > 
-      <div className="tweet" >
-        {showUserPosts ? (
-          myData && myData.map(post => (
-            <div key={post._id} className="tweet" style={{  marginTop: 10, borderBottom: "1px solid grey"}}>
-              <h6 style={{display:'flex'}}><img src={userProfile && userProfile.user.profilePic} style={{width: '60px', height: '60px' }}/> <div style={{marginLeft: "20px"}}>{post.postedBy?.username} ~ {" "}
-                {new Date(post.date).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-                 </div>
-              </h6>
-              <p style={{ marginBottom: 20 }}>{post.body}</p>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <div style={{ display: "flex", alignItems: "center", marginRight: 10 }}>
-              {post.likes.includes(state._id)? 
-                  <button onClick={()=>{unlikePost(post._id)}} style={{ backgroundColor: "transparent", color: "red", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
-                    :
-                  <button onClick={()=>{likePost(post._id)}} style={{ backgroundColor: "transparent", color: "white", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
-              }                
-              <p>{post.likes.length}</p>
+        
+        {showCreatePostForm && (
+          <div className="fixed-overlay">
+            <form onSubmit={createPost} className="createPostForm">
+              <div className="input-field">
+                <textarea
+                  id="body"
+                  placeholder="What's on your mind?"
+                  style={{ backgroundColor: "white", color: 'black', height: '150px' }}
+                  value={body}
+                  onChange={(event) => setBody(event.target.value)}
+                ></textarea>
               </div>
-              <div style={{ marginLeft: -80, marginTop: 4 }}><i className="material-icons" style={{ marginBottom: 20 }}>comment</i></div>
-    
-              <div style={{ marginLeft: -50, marginTop: 2 }}><i className="material-icons" style={{ marginBottom: 20 }}>repeat</i></div>
-              <button onClick={() => deletePost(post._id)} style={{ backgroundColor: "black", color: "white", border: "none", transition: "transform 0.3s" }}>
-                  <div style={{ marginLeft: "auto" }}>
-                    <i className="material-icons" style={{ marginBottom: 20 }}>delete</i>
-                  </div>
-                </button>
+              <div className="formActions">
+                <button type="submit" className="btn waves-effect waves-light" style={{ borderRadius: 100 }}>Submit</button>
+                <button type="button" onClick={() => setShowCreatePostForm(false)} className="btn waves-effect waves-light" style={{ borderRadius: 100 }}>Cancel</button>
               </div>
-            </div>
-          ))
-        ) : (
-          data && data.map(post => (
-            <div key={post._id} className="tweet" style={{ marginTop: 10, borderBottom: "1px solid grey"}}>
-              <h6 style={{display:'flex'}}><img src={userProfile && userProfile.user.profilePic} style={{width: '60px', height: '60px' }}/> <div style={{marginLeft: "20px"}}>{post.postedBy?.username} ~ {" "}
-                {new Date(post.date).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-                 </div>
-              </h6>
-              <p style={{ marginBottom: 20 }}>{post.body}</p>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <div style={{ display: "flex", alignItems: "center", marginRight: 10 }}>
-                {post.likes.includes(state._id)? 
-                  <button onClick={()=>{unlikePost(post._id)}} style={{ backgroundColor: "transparent", color: "red", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
-                    :
-                  <button onClick={()=>{likePost(post._id)}} style={{ backgroundColor: "transparent", color: "white", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
-                }            
-                <p>{post.likes.length}</p>
-              </div>
-              <div style={{ marginLeft: -80, marginTop: 4, display:"flex" }} onClick={() => viewPost(post._id)}>
-                <i className="material-icons" style={{ marginBottom: 20 }}>comment</i>
-              <p style={{marginLeft: 10}}>{post.comments.length}</p>
-              </div>
-              <div style={{ marginLeft: -50, marginTop: 2 }}><i className="material-icons" style={{ marginBottom: 20 }}>repeat</i></div>
-              <button onClick={() => deletePost(post._id)} style={{ backgroundColor: "black", color: "white", border: "none", transition: "transform 0.3s" }}>
-                  <div style={{ marginLeft: "auto" }}> {post.postedBy._id == state._id?  <i className="material-icons" style={{ marginBottom: 20 }}>delete</i> : <i className="material-icons" style={{ marginBottom: 20 }}>grain</i>}
-                  </div>
-                </button>
-              </div>
-              {/* <img src={post.photo} alt="Post" /> */}
-            </div>
-          ))
+            </form>
+          </div>
         )}
+
+        <div class="col s6 push-s3" style={{ backgroundColor: "black", color:'white', borderLeft: "1px solid grey",  borderRight: "1px solid grey" }} > 
+          <div className="tweet" >
+            {showUserPosts ? (
+              myData && myData.map(post => (
+                <div key={post._id} className="tweet" style={{  marginTop: 10, borderBottom: "1px solid grey"}}>
+                  <h6 style={{display:'flex'}}><img src={userProfile && userProfile.user.profilePic} style={{width: '60px', height: '60px' }}/> <div style={{marginLeft: "20px"}}>{post.postedBy?.username} ~ {" "}
+                    {new Date(post.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                    </div>
+                  </h6>
+                  <p style={{ marginBottom: 20 }}>{post.body}</p>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <div style={{ display: "flex", alignItems: "center", marginRight: 10 }}>
+                  {post.likes.includes(state._id)? 
+                      <button onClick={()=>{unlikePost(post._id)}} style={{ backgroundColor: "transparent", color: "red", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+                        :
+                      <button onClick={()=>{likePost(post._id)}} style={{ backgroundColor: "transparent", color: "white", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+                  }                
+                  <p>{post.likes.length}</p>
+                  </div>
+                  <div style={{ marginLeft: -80, marginTop: 4 }}><i className="material-icons" style={{ marginBottom: 20 }}>comment</i></div>
+        
+                  <div style={{ marginLeft: -50, marginTop: 2 }}><i className="material-icons" style={{ marginBottom: 20 }}>repeat</i></div>
+                  <button onClick={() => deletePost(post._id)} style={{ backgroundColor: "black", color: "white", border: "none", transition: "transform 0.3s" }}>
+                      <div style={{ marginLeft: "auto" }}>
+                        <i className="material-icons" style={{ marginBottom: 20 }}>delete</i>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              data && data.map(post => (
+                <div key={post._id} className="tweet" style={{ marginTop: 10, borderBottom: "1px solid grey"}}>
+                  <h6 style={{display:'flex'}}><img src={userProfile && userProfile.user.profilePic} style={{width: '60px', height: '60px' }}/> <div style={{marginLeft: "20px"}}>{post.postedBy?.username} ~ {" "}
+                    {new Date(post.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                    </div>
+                  </h6>
+                  <p style={{ marginBottom: 20 }}>{post.body}</p>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <div style={{ display: "flex", alignItems: "center", marginRight: 10 }}>
+                    {post.likes.includes(state._id)? 
+                      <button onClick={()=>{unlikePost(post._id)}} style={{ backgroundColor: "transparent", color: "red", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+                        :
+                      <button onClick={()=>{likePost(post._id)}} style={{ backgroundColor: "transparent", color: "white", border: "none", transition: "transform 0.3s" }}> <i className="material-icons" style={{ marginBottom: 20, marginRight: 0 }}>favorite</i></button>
+                    }            
+                    <p>{post.likes.length}</p>
+                  </div>
+                  <div style={{ marginLeft: -80, marginTop: 4, display:"flex" }} onClick={() => viewPost(post._id)}>
+                    <i className="material-icons" style={{ marginBottom: 20 }}>comment</i>
+                  <p style={{marginLeft: 10}}>{post.comments.length}</p>
+                  </div>
+                  <div style={{ marginLeft: -50, marginTop: 2 }}><i className="material-icons" style={{ marginBottom: 20 }}>repeat</i></div>
+                  <button onClick={() => deletePost(post._id)} style={{ backgroundColor: "black", color: "white", border: "none", transition: "transform 0.3s" }}>
+                      <div style={{ marginLeft: "auto" }}> {post.postedBy._id == state._id?  <i className="material-icons" style={{ marginBottom: 20 }}>delete</i> : <i className="material-icons" style={{ marginBottom: 20 }}>grain</i>}
+                      </div>
+                    </button>
+                  </div>
+                  {/* <img src={post.photo} alt="Post" /> */}
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
       </div>
-    </div>
-  </div>
 );
 
 }

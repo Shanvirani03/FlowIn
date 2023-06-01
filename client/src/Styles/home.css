@@ -11,8 +11,8 @@
     /* font-family: 'Cinzel', serif;
     font-family: 'Foldit', cursive; */
     /* font-family: cursive; */
-    font-family: 'Cinzel', serif;
-    font-family: 'Foldit', cursive;
+    /* font-family: 'Cinzel', serif; */
+    /* font-family: 'Foldit', cursive; */
     font-family: 'Rubik Wet Paint', cursive;
 }
 
@@ -44,7 +44,38 @@
 .headerContainer h1 {
     font-size: 6em;
     margin: 0;
-  }
+}
+
+.app-name {
+    /* font-size: 48px;
+    position: relative;
+    display: inline-block; */
+    animation: spot-light 2s ease-in-out infinite;
+}
+
+@keyframes spot-light {
+    0% {
+    text-shadow: 0 0 5px #ff0000, 0 0 20px #ff0000;
+    transform: translateY(0);
+    }
+    50% {
+    text-shadow: 0 0 5px #ff0000, 0 0 20px #ff0000, 0 0 50px #ff0000;
+    transform: translateY(-10px);
+    }
+    100% {
+    text-shadow: 0 0 5px #ff0000, 0 0 20px #ff0000, 0 0 50px #ff0000, 0 0 100px #ff0000;
+    transform: translateY(0);
+    }
+}
+
+/* @keyframes acid-drip {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(200px);
+    }
+} */
 
 .headerContainer h1 span {
     color:gold;

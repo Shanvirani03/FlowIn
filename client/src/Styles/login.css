@@ -18,7 +18,7 @@
 }
 
 .head-container span {
-  color: rgb(25, 221, 195);
+  color: gold;
 }
   
 /* label color */
@@ -58,4 +58,29 @@
 /* icon prefix focus color */
 .input-field .prefix.active {
   color: #fff; 
+}
+
+.signup-btn {
+  padding: 10px;
+  background-color: transparent;
+  transition: transform 0.3s ease;
+  font-family: 'Rubik Wet Paint', cursive;
+}
+
+.signup-btn:hover {
+  transform: scale(1.2);
+  background-color: transparent;
+  font-family: 'Rubik Wet Paint', cursive;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.toggle-password.visible {
+  color: #007bff;
 }

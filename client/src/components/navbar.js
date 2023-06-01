@@ -60,7 +60,8 @@ function Navbar() {
       ];
     } else {
       return [
-        <li key="1"><a href="/Login">LOGIN</a></li>
+        <li key="1"><a href="/Login">LOGIN</a></li>,
+        <li key="2"><a href="/Registration">SIGN UP</a></li> 
       ];
     }
   };
@@ -100,7 +101,12 @@ function Navbar() {
   return (
     <nav>
       <div className="nav-wrapper">
-        <a href={state ? "/Profile" : "/"} className="brand-logo left" style={{ marginLeft: 20 }}>O<span>FF</span>TOP</a>
+        {/* <a href="/Test">Test</a> */}
+        <a href={state ? "/Profile" : "/"} className="brand-logo" style={{ marginLeft: 20 }}>
+          <span className='navbar-logo-letter1'>O</span>
+          <span className='navbar-logo-letter2'>FF</span>
+          <span className='navbar-logo-letter3'>TOP</span>
+        </a>
         <a href="/" data-target="mobile-demo" className="sidenav-trigger right">
           <i className="material-icons">menu</i>
         </a>
